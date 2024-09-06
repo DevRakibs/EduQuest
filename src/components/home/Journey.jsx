@@ -2,6 +2,8 @@ import { CallMade, Check } from '@mui/icons-material'
 import { Box, Button, Chip, Container, List, ListItem, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { FadeAnimation, SlideAnimation, ZoomAnimation } from '../../common/Animation'
+import CButton from '../../common/CButton'
+import { Link } from 'react-router-dom'
 
 const data = [
   {
@@ -23,6 +25,7 @@ const data = [
 ]
 
 const Journey = () => {
+
   return (
     <Box sx={{
       position: 'relative',
@@ -82,8 +85,8 @@ const Journey = () => {
           }
         </Stack>
 
-        <Stack direction={{ xs: 'column', md: 'row' }} alignItems='center' gap={4} mt={15}>
-          <Box sx={{ width: { xs: '100%', md: '500px', flex: 1.5 } }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} alignItems='center' gap={10} mt={15}>
+          <Box sx={{ width: { xs: '100%', md: '500px', } }}>
             <ZoomAnimation >
               <img style={{ width: '100%' }} src="/about1.png" alt="" />
             </ZoomAnimation>
@@ -121,7 +124,9 @@ const Journey = () => {
               </SlideAnimation>
             </List>
             <SlideAnimation direction='up' delay={600}>
-              <Button sx={{ width: 'fit-content' }} variant='contained' endIcon={<CallMade />} >View All Course</Button>
+              <Link to='/course'>
+                <CButton style={{ width: 'fit-content' }} rounded large contained endIcon={<CallMade />} >View All Course</CButton>
+              </Link>
             </SlideAnimation>
           </Stack>
         </Stack>

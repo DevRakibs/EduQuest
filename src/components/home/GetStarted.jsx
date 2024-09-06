@@ -1,6 +1,8 @@
 import { CallMade } from '@mui/icons-material'
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import { SlideAnimation } from '../../common/Animation'
+import CButton from '../../common/CButton'
+import { Link } from 'react-router-dom'
 
 const GetStarted = () => {
   return (
@@ -34,7 +36,9 @@ const GetStarted = () => {
           </SlideAnimation>
         </Box>
         <SlideAnimation direction='up' delay={200}>
-          <Button sx={{ height: { xs: '40px', md: '50px' }, px: 4 }} color='secondary' variant='contained' endIcon={<CallMade />}>Get Started Now</Button>
+          <Link to='/signup'>
+            <CButton rounded style={{ height: { xs: '40px', md: '50px' }, px: 4 }} color='secondary' contained endIcon={<CallMade />}>Get Started Now</CButton>
+          </Link>
         </SlideAnimation>
       </Stack>
     </Container>

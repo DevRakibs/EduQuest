@@ -1,13 +1,24 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import Navbar from './Navbar'
-import { FadeAnimation, SlideAnimation } from '../../common/Animation'
+import { FadeAnimation, SlideAnimation, ZoomAnimation } from '../../common/Animation'
 import { ArrowForward, Star } from '@mui/icons-material'
+import * as herojson from '../../json/herojson.json'
+import './Hero.css'
+import Lottie from 'react-lottie'
 
 const Hero = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: herojson,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+  };
   return (
     <Box maxWidth='xxl' sx={{
       position: 'relative',
-      height: { xs: '800px', md: '800px' },
+      height: { xs: '700px', md: '750px' },
       '::before': {
         content: '""',
         position: 'absolute',
@@ -27,8 +38,9 @@ const Hero = () => {
       {/* <Navbar /> */}
 
       <Container maxWidth='xl'>
-        <Stack sx={{ height: { xs: '500px', md: '700px' } }} direction={{ xs: 'column', md: 'row' }} alignItems='center' justifyContent='space-between' gap={5}>
+        <Stack sx={{ height: { xs: '500px', md: '750px' } }} direction={{ xs: 'column', md: 'row' }} alignItems='center' justifyContent='space-between' gap={5}>
           <Stack sx={{
+            flex: 1.5,
             color: '#fff',
             width: { xs: '100%', md: '50%' },
             gap: { xs: 3, md: 3 },
@@ -74,19 +86,27 @@ const Hero = () => {
 
           </Stack>
 
-          <SlideAnimation direction='up'>
+          {/* <Box sx={{ flex:1,height:'100%',overflow:'hidden' }}>
+            <HeroGif />
+          </Box> */}
+
+
+          <ZoomAnimation>
             <Box sx={{
               display: { md: 'none', lg: 'block' },
-              width: { xs: '100%', sm: '500px', md: '400px', lg: '600px' }
+              ml:{xs:0,lg:10},
+              width: { xs: '100%', sm: '400px', md: '400px', lg: '500px' },
+              height: { xs: '280px', sm: '300px', lg: '500px' }
             }}>
-              <img style={{
+              <Lottie options={defaultOptions} />
+              {/* <img style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
                 borderRadius: '20px'
-              }} src="/hero-bg1.png" alt="" />
+              }} src="/hero-bg1.png" alt="" /> */}
             </Box>
-          </SlideAnimation>
+          </ZoomAnimation>
 
         </Stack>
       </Container>

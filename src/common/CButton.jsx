@@ -9,17 +9,14 @@ const CButton = (props) => {
       sx={{
         textTransform: "none",
         boxShadow: "none",
-        height: '40px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        whiteSpace:'nowrap',
-        // border: '1px solid lightgray',
+        borderRadius: props.rounded ? '50px' : '4px',
+        whiteSpace: 'nowrap',
         position: "relative",
         ...props.style,
       }}
       // disableRipple
-      size={props.size}
-      variant={props.variant}
+      size={props.small ? 'small' : props.large ? 'large' : ''}
+      variant={props.contained ? 'contained' : props.outlined ? 'outlined' : ''}
       startIcon={props.startIcon}
       endIcon={props.endIcon}
       onClick={props.onClick}

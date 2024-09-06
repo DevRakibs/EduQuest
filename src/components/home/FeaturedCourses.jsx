@@ -4,6 +4,8 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import useIsMobile from '../../hook/useIsMobile';
 import { FadeAnimation, SlideAnimation } from '../../common/Animation';
+import { Link } from 'react-router-dom';
+import CourseCard from '../CourseCard';
 
 const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
   const { carouselState: { currentSlide } } = rest;
@@ -27,7 +29,7 @@ const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
-    items: 5
+    items: 3
   },
   desktop: {
     breakpoint: { max: 3000, min: 1278 },
@@ -43,42 +45,6 @@ const responsive = {
     items: 1
   }
 };
-
-const CourseCard = () => {
-  return (
-    <Stack sx={{
-      width: { xs: '100%', md: '350px' },
-      bgcolor: '#fff',
-      p: 2, borderRadius: '8px',
-      position: 'relative',
-      boxShadow: 3
-    }}>
-      <Box sx={{ width: '100%', height: { xs: '300px', md: '350px' } }}>
-        <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} src="/course-01.jpg" alt="" />
-      </Box>
-      <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', my: { xs: 1, md: 2 } }}>Wordpress Advance to Marketplace</Typography>
-      <Stack direction='row' justifyContent='center' flexWrap='wrap' gap={1} mb={2}>
-        {
-          [
-            '25 Live Class',
-            '15+ Website',
-            'Own Softwere',
-            'Course Certificate',
-            'Re-Admission',
-            'Support Instructor'
-          ].map(item => (
-            <Typography sx={{
-              border: '1px solid lightgray',
-              px: 1.5, borderRadius: '8px',
-              whiteSpace: 'nowrap'
-            }} variant='body2' key={item}>{item}</Typography>
-          ))
-        }
-      </Stack>
-      <Button variant='contained' sx={{ borderRadius: '50px' }}>Register Now</Button>
-    </Stack>
-  )
-}
 
 const FeaturedCourses = (props) => {
   const isMobile = useIsMobile()
@@ -99,7 +65,7 @@ const FeaturedCourses = (props) => {
         zIndex: -1
       }
     }}>
-      <Container sx={{ position: 'relative', py: { xs: 5, md: 10 } }} maxWidth='xl'>
+      <Container sx={{ position: 'relative', px: .5, py: { xs: 5, md: 10 } }} maxWidth='xl'>
         <Typography sx={{ fontSize: { xs: '30px', md: '40px' }, fontWeight: 600, mb: 2, textAlign: 'center' }}>
           <SlideAnimation direction='up'>
             Featured Courses
@@ -118,7 +84,7 @@ const FeaturedCourses = (props) => {
             arrows={false}
             infinite
             responsive={responsive}
-            centerMode={!isMobile}
+            // centerMode={!isMobile}
             renderButtonGroupOutside
             autoPlay
             customButtonGroup={<ButtonGroup />}
@@ -143,7 +109,9 @@ const FeaturedCourses = (props) => {
         </Box>
         <Stack direction='row' justifyContent='center' mt={4}>
           <SlideAnimation direction='up'>
-            <Button sx={{ borderRadius: '50px' }} endIcon={<ArrowOutwardOutlined />} variant='outlined'>All Course</Button>
+            <Link to='/course'>
+              <Button sx={{ borderRadius: '50px' }} endIcon={<ArrowOutwardOutlined />} variant='outlined'>All Course</Button>
+            </Link>
           </SlideAnimation>
         </Stack>
       </Container>

@@ -2,6 +2,7 @@ import { ArrowOutwardOutlined, CalendarMonthOutlined } from '@mui/icons-material
 import { Box, Button, Container, ListItem, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { SlideAnimation } from '../../common/Animation'
+import BlogCard from '../BlogCard'
 
 const data = [
   {
@@ -56,26 +57,7 @@ const Blog = () => {
           {
             data.map((item, i) => (
               <SlideAnimation key={i} direction='up' delay={100 * i}>
-                <Box sx={{
-                  width: { xs: '100%', md: '320px' }
-                }} >
-                  <Box sx={{
-                    width: { xs: '100%', md: '300px' },
-                    height: '220px',
-                    mb: 1.5
-                  }}>
-                    <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} src={item.img} alt="" />
-                  </Box>
-                  <Typography variant='body2' mb={1}>{item.category}</Typography>
-                  <Typography sx={{ fontWeight: 600, mb: 1 }}>{item.title}</Typography>
-                  <Stack direction='row' justifyContent='space-between'>
-                    <Stack direction='row' gap={.5} alignItems='center'>
-                      <CalendarMonthOutlined sx={{ color: 'gray' }} fontSize='small' />
-                      <Typography sx={{ fontSize: '14px', color: 'gray' }}>{item.date}</Typography>
-                    </Stack>
-                    <Button>See More</Button>
-                  </Stack>
-                </Box>
+                <BlogCard item={item} />
               </SlideAnimation>
             ))
           }

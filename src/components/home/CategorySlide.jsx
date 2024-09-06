@@ -15,7 +15,7 @@ const CategorySlide = () => {
   const match = useMediaQuery('(min-width:600px)')
 
   return (
-    <Box sx={{ my: { xs: 5, md: 5 } }}>
+    <Box sx={{ my: { xs: 5, md: 5 },overflow:'hidden' }}>
       <Marquee autoFill direction='right' gradient={match} speed={50} >
         {
           category.map((item, i) => (

@@ -1,66 +1,16 @@
-import { Avatar, Box, Button, Container, FormControl, IconButton, Input, InputLabel, MenuItem, Paper, Select, Stack, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, Button, Container, FormControl, IconButton, Input, InputLabel, MenuItem, Paper, Select, Stack, Typography } from '@mui/material'
+import { useState } from 'react'
 import BreadCrumb from '../../common/BreadCrumb'
-import { ArrowForward, Search } from '@mui/icons-material'
+import { Search } from '@mui/icons-material'
+import CourseCard from '../../components/CourseCard'
+import { SlideAnimation } from '../../common/Animation'
 
-const CourseCard = () => {
-  return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} alignItems='center' gap={{ xs: 1, sm: 2, md: 4 }} sx={{
-      // maxWidth: '1000px',
-      border: '1px solid lightgray',
-      width: '100%',
-      bgcolor: '#fff',
-      p: 2, borderRadius: '8px',
-      position: 'relative',
-      boxShadow: 1
-    }}>
-      <Box sx={{ width: { xs: '100%', md: '300px' }, height: '220px' }}>
-        <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} src="/course-01.jpg" alt="" />
-      </Box>
-      <Box sx={{ width: '100%' }}>
-        <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', my: { xs: 1, md: 2 } }}>Wordpress Advance to Marketplace</Typography>
-        <Stack direction='row' flexWrap='wrap' gap={1} mb={1}>
-          {
-            [
-              '25 Live Class',
-              '15+ Website',
-              'Own Softwere',
-              'Course Certificate',
-              'Re-Admission',
-              'Support Instructor'
-            ].map(item => (
-              <Typography sx={{
-                border: '1px solid lightgray',
-                px: 1.5, borderRadius: '8px',
-                whiteSpace: 'nowrap'
-              }} variant='body2' key={item}>{item}</Typography>
-            ))
-          }
-        </Stack>
-        <Typography sx={{ mb: 1 }}>Course Fee: <span style={{ color: 'green', }}>$40</span></Typography>
-        <Stack direction={{ xs: 'column', md: 'row' }} justifyContent='space-between' alignItems={{ xs: 'flex-start', md: 'center' }}>
-          <Stack direction='row' gap={1}>
-            <Avatar />
-            <Box>
-              <Typography sx={{ whiteSpace: 'nowrap' }}>Jesse Stevens</Typography>
-              <Typography variant='body2'>Instructor</Typography>
-            </Box>
-          </Stack>
-          <Stack sx={{ width: '100%' }} direction='row' gap={2} alignItems='center' mt={{ xs: 1, md: 0 }} justifyContent={{ xs: 'space-between', md: 'flex-end' }}>
-            <Button sx={{ borderRadius: '50px' }}>Details</Button>
-            <Button variant='contained' sx={{ borderRadius: '50px' }}>Enrole Now</Button>
-          </Stack>
-        </Stack>
-      </Box>
-    </Stack >
-  )
-}
 
 const Course = () => {
   const [searchText, setSearchText] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   return (
-    <Box>
+    <Box mb={10}>
       <Stack alignItems='center' justifyContent='center' sx={{
         height: '200px',
         backgroundImage: 'url(/section-top.jpg)',
@@ -69,6 +19,15 @@ const Course = () => {
       }}>
         <Typography sx={{ fontSize: { xs: '20px', md: '30px' }, color: 'primary.main', fontWeight: 600, mb: 2 }}>All Courses</Typography>
         <BreadCrumb page='Courses' />
+      </Stack>
+
+      <Stack alignItems='center' gap={3} my={4}>
+        <SlideAnimation direction='up'>
+          <Typography sx={{ fontSize: { xs: '20px', md: '30px' }, fontWeight: 600, textAlign: 'center' }}>আমাদের কোর্স সমূহ</Typography>
+        </SlideAnimation>
+        <SlideAnimation direction='up' delay={100}>
+          <Typography sx={{ maxWidth: '600px',textAlign:'center' }}>এসাইনমেন্ট ও প্রোজেক্ট নির্ভর ইন্ডাস্ট্রি ডিমান্ড প্রফেশনাল কোর্স, ফ্রিল্যান্সিং মার্কেটপ্লেস ক্লাস, বোনাস টিউটোরিয়াল, সাপোর্ট ক্লাস, টপিক বেজড মেটেরিয়ালস এবং ওয়ার্কশীট এর সমন্বয়ে সাজানো হয়েছে অফলাইন ব্যাচের প্রতিটি কোর্স।</Typography>
+        </SlideAnimation>
       </Stack>
 
       <Container maxWidth='xl' sx={{ py: 4 }}>
@@ -104,40 +63,17 @@ const Course = () => {
           </Box>
         </Stack>
 
-        <Stack direction={{ xs: 'column', md: 'row' }} gap={4}>
-          <Stack flex={2} alignItems='center' gap={3}>
-            {
-              [1, 2, 3, 4, 5, 6].map(item => (
-                <Box key={item} mt={2}>
+
+        <Stack direction={{ xs: 'column', md: 'row' }} flexWrap='wrap' flex={2} gap={3}>
+          {
+            [1, 2, 3, 4, 5, 6].map((item,id) => (
+              <SlideAnimation key={item} direction='up' delay={100 * id}>
+                <Box mt={2}>
                   <CourseCard />
                 </Box>
-              ))
-            }
-          </Stack>
-          <Paper elevation={3} sx={{
-            display: { xs: 'none', lg: 'block' },
-            flex: 1,
-            p: 3, mt: 2,
-            maxHeight: '800px'
-          }}>
-            <Typography sx={{ fontSize: '22px', fontWeight: 600, mb: 2 }}>Latest Course</Typography>
-            <Stack gap={3}>
-              {
-                [1, 2, 3, 4, 5].map((item, i) => (
-                  <Stack direction='row' gap={2} key={i}>
-                    <img style={{ width: '100px', height: '70px', objectFit: 'cover', borderRadius: '8px' }} src="/course-01.jpg" alt="" />
-                    <Box>
-                      <Typography sx={{ fontWeight: 600, mb: 1 }}>Become a PHP Master and Make Money</Typography>
-                      <Stack direction='row' justifyContent='space-between'>
-                        <Typography sx={{ color: 'green' }}>$100</Typography>
-                        <Button sx={{ borderRadius: '50px' }} variant='outlined' size='small'>Enrole Now</Button>
-                      </Stack>
-                    </Box>
-                  </Stack>
-                ))
-              }
-            </Stack>
-          </Paper>
+              </SlideAnimation>
+            ))
+          }
         </Stack>
 
       </Container>

@@ -1,15 +1,12 @@
-import React from 'react'
-import Hero from './Hero'
-import Navbar from './Navbar'
-import CategorySlide from './CategorySlide'
-import Journey from './Journey'
-import Categories from './Categories'
-import FeaturedCourses from './FeaturedCourses'
-import OurSupport from './OurSupport'
-import Blog from './Blog'
-import FAQ from './FAQ'
-import Footer from './Footer'
-import GetStarted from './GetStarted'
+import Hero from '../../components/home/Hero'
+import CategorySlide from '../../components/home/CategorySlide'
+import Journey from '../../components/home/Journey'
+import Categories from '../../components/home/Categories'
+import FeaturedCourses from '../../components/home/FeaturedCourses'
+import OurSupport from '../../components/home/OurSupport'
+import Blog from '../../components/home/Blog'
+import FAQ from '../../components/home/FAQ'
+import GetStarted from '../../components/home/GetStarted'
 
 const Home = () => {
   return (
@@ -23,7 +20,6 @@ const Home = () => {
       <Blog />
       <FAQ />
       <GetStarted />
-      <Footer />
     </>
   )
 }

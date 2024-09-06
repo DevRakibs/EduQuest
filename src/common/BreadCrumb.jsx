@@ -1,16 +1,16 @@
 import { Breadcrumbs, Typography, Link as MuiLink } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 
-const BreadCrumb = () => {
+const BreadCrumb = (props) => {
   const location = useLocation();
 
   // Split the current path into segments
   const pathnames = location.pathname.split('/').filter((x) => x);
 
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs sx={props.style} aria-label="breadcrumb">
       {/* Home Link */}
-      <Link className="link" style={{ color: 'blue' }} to="/">
+      <Link className="link" to="/home">
         Home
       </Link>
 
