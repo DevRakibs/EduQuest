@@ -3,7 +3,7 @@ import { Box, FormControl, IconButton, Input, InputLabel, MenuItem, Select, Stac
 import { useState } from 'react'
 import CourseCard from '../../../components/CourseCard'
 
-const Courses = () => {
+const AllCourse = () => {
   const [searchText, setSearchText] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
 
@@ -61,4 +61,4 @@ const Courses = () => {
   )
 }
 
-export default Courses
+export default AllCourse

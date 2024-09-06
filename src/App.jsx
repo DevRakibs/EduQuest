@@ -18,11 +18,11 @@ import LearnCourse from './pages/dashboard/enrolledCourse/LearnCourse'
 import SignIn from './pages/signin/SignIn'
 import SignUp from './pages/signin/Signup'
 import Setting from './pages/dashboard/settings/Setting'
-import Courses from './pages/dashboard/Courses/Courses'
 import Profile from './pages/dashboard/profile/Profile'
 import UserProvider, { useUserContext } from './context/UserProvider'
 import MyCourse from './pages/dashboard/myCourse/MyCourse'
 import AddCourse from './pages/dashboard/myCourse/AddCourse'
+import AllCourse from './pages/dashboard/allCourse/AllCourse'
 
 function App() {
 
@@ -67,7 +67,7 @@ function App() {
         </Route>
         <Route path='/dashboard' element={<Layout />}>
           <Route index element={<Dashboard />} />
-          <Route path='courses' element={<Courses />} />
+          <Route path='all-course' element={<AllCourse />} />
           {
             instructor &&
             <>

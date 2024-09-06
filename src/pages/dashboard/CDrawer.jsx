@@ -70,8 +70,8 @@ const CDrawer = ({ drawerClose }) => {
       icon: <PersonOutlineOutlined fontSize='small' />
     },
     {
-      text: 'Courses',
-      link: 'courses',
+      text: 'All Course',
+      link: 'all-course',
       icon: < Assignment fontSize='small' />
     },
     {
