@@ -240,7 +240,7 @@ const SignIn = (props) => {
                   width: { xs: '70%', md: '200px' },
                   mb: 2
                 }}>
-                  <Typography sx={{ fontSize: '35px', color: 'primary.main', fontWeight: 600 }}>EasyLearn</Typography>
+                  <Typography sx={{ fontSize: '35px', color: 'primary.main', fontWeight: 600 }}>Edu-Quest</Typography>
                   {/* <img width='100%' src="logo.svg" alt="" /> */}
                 </Box>
                 <Link to='/home'>

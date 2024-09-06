@@ -15,7 +15,7 @@ const Footer = () => {
         <Stack direction={{ xs: 'column', md: 'row' }}>
 
           <Box flex={1.5} sx={{ mb: { xs: 4, md: 0 } }}>
-            <Typography sx={{ fontSize: '55px', fontWeight: 600 }}>EasyLearn</Typography>
+            <Typography sx={{ fontSize: '55px', fontWeight: 600 }}>EduQuest</Typography>
             {/* <Box sx={{
               width: { xs: '150px', md: '200px' },
               mb: 2

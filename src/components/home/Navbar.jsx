@@ -27,7 +27,7 @@ const Navbar = () => {
           <Stack direction='row' alignItems='center' justifyContent='space-between' py={2}>
             <Box sx={{ width: { xs: '150px', md: '200px' } }}>
               <Link className='link' to='/home'>
-                <Typography sx={{ fontSize: '25px', fontWeight: 600 }}>EasyLearn</Typography>
+                <Typography sx={{ fontSize: '25px', fontWeight: 600 }}>EduQuest</Typography>
                 {/* <img style={{ width: '100%' }} src='/logo.svg' alt="Logo" /> */}
               </Link>
             </Box>
