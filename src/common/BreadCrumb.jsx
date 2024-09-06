@@ -10,7 +10,7 @@ const BreadCrumb = (props) => {
   return (
     <Breadcrumbs sx={props.style} aria-label="breadcrumb">
       {/* Home Link */}
-      <Link className="link" to="/home">
+      <Link className="link" to="/">
         Home
       </Link>
 

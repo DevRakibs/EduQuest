@@ -105,7 +105,7 @@ const CDrawer = ({ drawerClose }) => {
           {user.me.role === 'student' ? 'Rolands Richard' : 'Engene Andre'}
         </Typography>
         <Typography sx={{ color: 'text.main' }}>{user.me.role}</Typography>
-        <Link to='/home'>
+        <Link to='/'>
           <IconButton sx={{
             position: 'absolute',
             left: 10,

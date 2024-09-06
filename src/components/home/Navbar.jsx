@@ -26,7 +26,7 @@ const Navbar = () => {
         <ClickAwayListener onClickAway={handleNavClose}>
           <Stack direction='row' alignItems='center' justifyContent='space-between' py={2}>
             <Box sx={{ width: { xs: '150px', md: '200px' } }}>
-              <Link className='link' to='/home'>
+              <Link className='link' to='/'>
                 <Typography sx={{ fontSize: '25px', fontWeight: 600 }}>EduQuest</Typography>
                 {/* <img style={{ width: '100%' }} src='/logo.svg' alt="Logo" /> */}
               </Link>
@@ -73,7 +73,7 @@ const Navbar = () => {
                 {navlinks.map((label) => (
                   <NavLink
                     key={label}
-                    to={`/${label.toLowerCase()}`}
+                    to={label === 'Home' ? '/' : `/${label.toLowerCase()}`}
                     className='link'
                     style={({ isActive }) => ({
                       borderBottom: isActive ? `3px solid ${isMobile ? '#fff' : '#392C7D'}` : '',

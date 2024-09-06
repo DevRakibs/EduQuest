@@ -56,14 +56,14 @@ function App() {
       <Routes>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
-        <Route element={<HomeLayout />} >
-          <Route index path='/home' element={<Home />} />
-          <Route path='/course' element={<Course />} />
-          <Route path='/course/:id' element={<CourseDetails />} />
-          <Route path='/resource' element={<Resourse />} />
-          <Route path='/blog' element={<Blog />} />
-          <Route path='/blog/:id' element={<BlogDetails />} />
-          <Route path='/contact' element={<Contact />} />
+        <Route path='/' element={<HomeLayout />} >
+          <Route index path='/' element={<Home />} />
+          <Route path='course' element={<Course />} />
+          <Route path='course/:id' element={<CourseDetails />} />
+          <Route path='resource' element={<Resourse />} />
+          <Route path='blog' element={<Blog />} />
+          <Route path='blog/:id' element={<BlogDetails />} />
+          <Route path='contact' element={<Contact />} />
         </Route>
         <Route path='/dashboard' element={<Layout />}>
           <Route index element={<Dashboard />} />

@@ -168,7 +168,7 @@ const SignUp = (props) => {
       background: { xs: 'linear-gradient(90deg, #EDF3FF 0%, #FFE8D7 100%, #F0FFDF 100%)', lg: 'none' }
     }} maxWidth='xxl'>
       <Stack sx={{ width: '100%', display: { xs: 'flex', md: 'none' } }} direction='row' alignItems='center' justifyContent='space-between'>
-        <Link to='/home'>
+        <Link to='/'>
           <CButton startIcon={<KeyboardArrowLeft />}>Home</CButton>
         </Link>
         <Box sx={{
@@ -243,7 +243,7 @@ const SignUp = (props) => {
                   <Typography sx={{ fontSize: '35px', color: 'primary.main', fontWeight: 600 }}>Edu-Quest</Typography>
                   {/* <img width='100%' src="logo.svg" alt="" /> */}
                 </Box>
-                <Link to='/home'>
+                <Link to='/'>
                   <Button sx={{
                     color: 'primary.main',
                     mb: 2,
