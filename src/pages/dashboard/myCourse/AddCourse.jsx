@@ -1,73 +1,51 @@
-import { Box, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
-import CTextField from '../../../common/CTextField'
+import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
 import { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import CButton from '../../../common/CButton';
+import InfoInput from './InfoInput';
+import ContentInput from './ContentInput';
 
-const toolbarOptions = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],
-    ['blockquote'],
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    [{ indent: '-1' }, { indent: '+1' }], // Indentation options
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    ['link', 'image', 'video'],
-    ['clean'], // Remove formatting option
-  ],
-};
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
 const AddCourse = () => {
-  const [description, setDescription] = useState('');
+  const [value, setValue] = useState(0);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <Box sx={{
+      minHeight: '100vh',
       bgcolor: '#fff',
-      p: 3, borderRadius: '16px',
-      minHeight: '100vh'
+      p: 3,
+      borderRadius: '16px',
     }} maxWidth='xl'>
       <Typography variant='h5' mb={2}>Create Course</Typography>
-      <Divider sx={{ mb: 2 }} />
-
-      <Stack direction={{ xs: 'column', md: 'row' }} gap={4}>
-
-        <Stack flex={1.5} gap={2}>
-          <Typography variant='h6' mb={3}>Course Info</Typography>
-          <CTextField size='small' topLabel='Title' />
-          <FormControl size='small' fullWidth>
-            <label>Category</label>
-            <Select >
-              <MenuItem value={10}>Web Development</MenuItem>
-              <MenuItem value={20}>Graphic Design</MenuItem>
-              <MenuItem value={30}>Marketing</MenuItem>
-            </Select>
-          </FormControl>
-          <CTextField size='small' type='number' topLabel='Price' />
-          <Stack direction='row' gap={2}>
-            <CTextField size='small' type='date' topLabel='Start Date' />
-            <CTextField size='small' type='date' topLabel='End Date' />
-          </Stack>
-          <Stack>
-            <label>Description</label>
-            <ReactQuill
-              style={{ height: '300px' }}
-              modules={toolbarOptions}
-              theme="snow"
-              placeholder="Descriptions*"
-              value={description}
-              onChange={setDescription}
-              required={true}
-            />
-          </Stack>
-        </Stack>
-
-        <Stack flex={1}>right</Stack>
-
-      </Stack>
-
-    </Box>
+      <Tabs value={value} onChange={handleChange}>
+        <Tab label="Course Info" />
+        <Tab label="Course Content" />
+      </Tabs>
+      <CustomTabPanel value={value} index={0}>
+        <InfoInput />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <ContentInput />
+      </CustomTabPanel>
+    </Box >
   )
 }
 

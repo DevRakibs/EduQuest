@@ -3,7 +3,7 @@ import React from 'react';
 import { Stack, TextField, Typography } from '@mui/material';
 
 // Custom TextField component
-const CustomTextField = ({
+const CTextField = ({
   label,
   topLabel,
   value,
@@ -33,4 +33,4 @@ const CustomTextField = ({
   );
 };
 
-export default CustomTextField;
+export default CTextField;

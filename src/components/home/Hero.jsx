@@ -48,7 +48,7 @@ const Hero = () => {
           }}>
             <Box sx={{ fontSize: '20px', color: 'primary.main', fontWeight: 600, mt: { xs: 5, md: 0 }, }}>
               <SlideAnimation direction='up'>
-                Welcome Edunity online courses
+                Welcome to EduQuest!
               </SlideAnimation>
             </Box>
             <Box sx={{
@@ -94,7 +94,7 @@ const Hero = () => {
           <ZoomAnimation>
             <Box sx={{
               display: { md: 'none', lg: 'block' },
-              ml:{xs:0,lg:10},
+              ml: { xs: 0, lg: 10 },
               width: { xs: '100%', sm: '400px', md: '400px', lg: '500px' },
               height: { xs: '280px', sm: '300px', lg: '500px' }
             }}>

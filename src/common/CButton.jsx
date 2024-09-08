@@ -14,6 +14,7 @@ const CButton = (props) => {
         position: "relative",
         ...props.style,
       }}
+      {...props}
       // disableRipple
       size={props.small ? 'small' : props.large ? 'large' : ''}
       variant={props.contained ? 'contained' : props.outlined ? 'outlined' : ''}
