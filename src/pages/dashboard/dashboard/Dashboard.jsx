@@ -2,7 +2,7 @@ import { Box, Container, Stack, Typography } from '@mui/material'
 import React from 'react'
 import CourseCard from '../../../components/CourseCard'
 import CourseCardSmall from '../../../components/CourseCardSmall'
-import { useUserContext } from '../../../context/UserProvider'
+import useUser from '../../../hook/useUser'
 
 const cardStyle = {
   box: {
@@ -24,7 +24,7 @@ const cardStyle = {
 }
 
 const Dashboard = () => {
-  const { user } = useUserContext()
+  const { user } = useUser()
   return (
     <Box sx={{
       bgcolor: '#fff',
@@ -40,7 +40,7 @@ const Dashboard = () => {
         <Box p={4} flex={2}>
           <Typography variant='h4' mb={1}>
             Hello,
-            {user.me.role === 'student' ? ' Rolands Richard!' : ' Engene Andre'}
+            <span style={{ fontWeight: 300 }}> {user?.name ? user?.name : user?.username}</span>
           </Typography>
           <Typography sx={{ fontWeight: 300, fontSize: '14px' }} mb={3}>Lets do something today!</Typography>
           <Typography sx={{ fontWeight: 300 }}>Set your study plan and growth with community</Typography>
@@ -66,7 +66,7 @@ const Dashboard = () => {
       </Stack> */}
 
       <Typography variant='h5' mt={4} mb={2}>
-        {user.me.role === 'student' ? 'Recently Enrolled Course' : 'Recently Published Course'}
+        {user?.role === 'student' ? 'Recently Enrolled Course' : 'Recently Published Course'}
 
       </Typography>
       <Stack direction={{ xs: 'column', md: 'row' }} gap={4} flexWrap='wrap'>

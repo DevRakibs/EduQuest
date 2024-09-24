@@ -2,35 +2,47 @@
 import React from "react";
 import { Button, CircularProgress } from "@mui/material";
 
-const CButton = (props) => {
+const CButton = ({
+  children,
+  onClick,
+  onSubmit,
+  startIcon,
+  endIcon,
+  color = 'primary',
+  variant = 'text',
+  size = 'medium',
+  loading = false,
+  disable = false,
+  rounded = false,
+  small = false,
+  large = false,
+  contained = false,
+  outlined = false,
+  style = {},
+  ...props
+}) => {
   return (
     <Button
-      className="btn41-43 btn-43"
       sx={{
         textTransform: "none",
         boxShadow: "none",
-        borderRadius: props.rounded ? '50px' : '4px',
+        borderRadius: rounded ? '50px' : '4px',
         whiteSpace: 'nowrap',
         position: "relative",
-        ...props.style,
+        ...style,
       }}
+      size={small ? 'small' : large ? 'large' : size}
+      variant={contained ? 'contained' : outlined ? 'outlined' : variant}
+      startIcon={startIcon}
+      endIcon={endIcon}
+      onClick={onClick}
+      disabled={loading || disable}
+      color={color}
+      onSubmit={onSubmit}
       {...props}
-      // disableRipple
-      size={props.small ? 'small' : props.large ? 'large' : ''}
-      variant={props.contained ? 'contained' : props.outlined ? 'outlined' : ''}
-      startIcon={props.startIcon}
-      endIcon={props.endIcon}
-      onClick={props.onClick}
-      disabled={
-        props.isLoading || props.disable
-          ? props.isLoading || props.disable
-          : false
-      }
-      color={props.color}
-      onSubmit={props.onSubmit}
     >
-      {props.children}
-      {props.isLoading && (
+      {children}
+      {loading && (
         <CircularProgress
           size={24}
           sx={{

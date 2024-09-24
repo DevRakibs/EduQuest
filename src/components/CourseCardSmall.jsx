@@ -4,7 +4,7 @@ import { Box, Button, Chip, LinearProgress, linearProgressClasses, List, ListIte
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import CButton from "../common/CButton";
-import { useUserContext } from "../context/UserProvider";
+import useUser from "../hook/useUser";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -44,7 +44,7 @@ function LinearProgressWithLabel(props) {
 
 const CourseCardSmall = () => {
   const [progress, setProgress] = useState(30);
-  const { user } = useUserContext()
+  const { user } = useUser()
   return (
     <Stack sx={{
       maxWidth: { xs: '100%', sm: '270px' },
@@ -79,16 +79,16 @@ const CourseCardSmall = () => {
         <Link className="link" to='/course/234'>
           <Typography sx={{ fontSize: '16px', lineHeight: '20px', fontWeight: '600' }}>Wordpress Advance to Marketplace</Typography>
         </Link>
-        {
-          user.me.role === 'student' ?
-            <>
+        {user && (
+          user?.role === 'student' ?
+            <Box>
               <Box sx={{ width: '100%', my: 2 }}>
                 <LinearProgressWithLabel value={progress} />
               </Box>
               <Link to='/dashboard/enrolled/525372'>
                 <Button variant="outlined" sx={{ width: '100%', borderRadius: '50px' }} size='small'>Continue Watching</Button>
               </Link>
-            </> :
+            </Box> :
             <Box>
               <Stack direction='row' gap={2} mt={.5} justifyContent='space-between'>
                 <ListItem sx={{ pl: 0 }}>
@@ -107,6 +107,7 @@ const CourseCardSmall = () => {
                 <CButton outlined startIcon={<Edit fontSize="small" />} >Edit</CButton>
               </Stack>
             </Box>
+        )
         }
       </Stack>
     </Stack>

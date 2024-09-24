@@ -1,49 +1,51 @@
-import { Box, Divider, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Divider, Stack, Typography } from '@mui/material'
 import React from 'react'
+import useUser from '../../../hook/useUser'
+import { format } from 'date-fns'
 
 const Profile = () => {
+  const { user } = useUser()
+
   return (
     <Box sx={{
       bgcolor: '#fff',
       p: 3, borderRadius: '16px',
-      minHeight: '100vh'
+      minHeight: '80vh'
     }} maxWidth='lg'>
       <Typography variant='h5' mb={2}>My Profile</Typography>
       <Divider />
 
       <Box>
+        <Avatar src={user?.img ?? ''} sx={{ width: 100, height: 100, my: 2 }} />
         <Stack direction={{ xs: 'column', md: 'row', mb: 2 }}>
           <Box mt={4}>
             <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '600px' }}>First Name</Typography>
-            <Typography variant='body'>Rolands</Typography>
+            <Typography variant='body'>{user?.name ?? '---'}</Typography>
           </Box>
           <Box mt={4}>
-            <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '200px' }}>Last Name</Typography>
-            <Typography variant='body'>Richard</Typography>
+            <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '200px' }}>User Name</Typography>
+            <Typography variant='body'>@{user?.username}</Typography>
           </Box>
         </Stack>
         <Stack direction={{ xs: 'column', md: 'row', mb: 2 }}>
           <Box mt={4}>
             <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '600px' }}>Registerion Date</Typography>
-            <Typography variant='body'>January 16, 2024, 11:15 AM</Typography>
+            <Typography variant='body'>{user?.createdAt && format(user?.createdAt, 'MMM dd, yyyy')}</Typography>
           </Box>
           <Box mt={4}>
-            <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '200px' }}>User Name</Typography>
-            <Typography variant='body'>@Ronald66236</Typography>
+            <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '600px' }}>Email</Typography>
+            <Typography variant='body'>{user?.email}</Typography>
           </Box>
+
         </Stack>
         <Stack direction={{ xs: 'column', md: 'row', mb: 2 }}>
           <Box mt={4}>
-            <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '600px' }}>Email</Typography>
-            <Typography variant='body'>ronald61@gmail.com</Typography>
-          </Box>
-          <Box mt={4}>
             <Typography sx={{ fontWeight: 600, mb: .5, minWidth: '200px' }}>Phone Number</Typography>
-            <Typography variant='body'>+88012617271</Typography>
+            <Typography variant='body'>{user?.phone ?? '---'}</Typography>
           </Box>
         </Stack>
-        <Typography sx={{ fontWeight: 600, mb: .5, mt: 4 }}>Bio</Typography>
-        <Typography variant='body' sx={{ width: '100px' }}>Very well thought out and articulate communication. Clear milestones, deadlines and fast work. Patience. Infinite patience. No shortcuts. Even if the client is being careless. Some quick example text to build on the card title and bulk the card's content Moltin gives you platform. As a highly skilled and successfull product development and design specialist with more than 4 Years of My experience lies in successfully conceptualizing, designing, and modifying consumer products specific to interior design and home furnishings.</Typography>
+        <Typography sx={{ fontWeight: 600, mb: .5, mt: 4 }}>Address</Typography>
+        <Typography variant='body' sx={{ width: '100px' }}>{user?.address ?? '---'}</Typography>
       </Box>
 
     </Box>

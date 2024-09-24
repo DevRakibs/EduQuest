@@ -223,7 +223,7 @@ const InfoInput = () => {
       {/* includes in course end */}
 
       {/* course description */}
-      <Stack>
+      <Stack mb={{ xs: 5, md: 0 }}>
         <label>Description</label>
         <ReactQuill
           style={{ height: '300px', marginBottom: '70px', borderRadius: '16px' }}

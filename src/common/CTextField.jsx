@@ -2,22 +2,25 @@
 import React from 'react';
 import { Stack, TextField, Typography } from '@mui/material';
 
-// Custom TextField component
 const CTextField = ({
-  label,
-  topLabel,
-  value,
-  onChange,
-  name,
-  variant,
+  label = '',
+  topLabel = '',
+  value = '',
+  onChange = () => { },
+  name = '',
+  variant = 'outlined',
   fullWidth = true,
   error = false,
   helperText = '',
   ...props
 }) => {
   return (
-    <Stack>
-      {topLabel && <Typography>{topLabel}</Typography>}
+    <Stack width='100%'>
+      {topLabel && (
+        <Typography variant="subtitle2" color="textSecondary">
+          {topLabel}
+        </Typography>
+      )}
       <TextField
         label={label}
         value={value}

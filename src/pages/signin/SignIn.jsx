@@ -1,159 +1,90 @@
 /* eslint-disable react/prop-types */
 import { Box, Button, Container, IconButton, Input, InputAdornment, Stack, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { KeyboardArrowLeft, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Google, KeyboardArrowLeft, Visibility, VisibilityOff } from '@mui/icons-material';
 import toast from 'react-hot-toast';
-import { jwtDecode } from 'jwt-decode';
 import CButton from '../../common/CButton';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axiosReq from '../../utils/axiosReq';
+import useAuth from '../../hook/useAuth';
 
-const SignIn = (props) => {
+const SignIn = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [forgotePassSecOpen, setForgotePassSecOpen] = useState(false);
-  const [payload, setPayload] = useState({ email: 'demo000@mail.com', password: 'haud7236te2e' })
+  const [payload, setPayload] = useState({ email: '', password: '' });
   const [payloadError, setPayloadError] = useState({ email: "", password: "" });
-  const [emailNotReceivedSecOpen, setEmailNotReceivedSecOpen] = useState(false)
-  const [disableResendBtn, setDisableResendBtn] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState({ email: '' });
-  const [promotions, setPromotions] = useState([])
+  const [emailNotReceivedSecOpen, setEmailNotReceivedSecOpen] = useState(false);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setEmailNotReceivedSecOpen(true);
+  //   }, 10000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
 
 
-  // const { loading: promotionLoading, error: promotionErr } = useQuery(PROMOTIONS, {
-  //   onCompleted: (res) => {
-  //     setPromotions(res.promotions.edges)
-  //   }
-  // })
+  const { setToken } = useAuth()
+
+  const mutation = useMutation({
+    mutationFn: (input) => axiosReq.post('/auth/login', input),
+    onSuccess: (res) => {
+      if (res.data.user.role === 'student') {
+        if (res.data.user.isVerified) {
+          setToken(res.data.jwt)
+          toast.success(res.data.message)
+        } else {
+          setEmailNotReceivedSecOpen(true)
+          toast.error('Please Verify Your Email')
+        }
+      } else {
+        toast.error('Please Login With Student Account')
+      }
+    },
+    onError: (err) => {
+      toast.error(err.response.data)
+    }
+  })
+
+  const resendEmailMutation = useMutation({
+    mutationFn: (email) => axiosReq.post('/auth/resend-verify-email', email),
+    onSuccess: (res) => {
+      toast.success(res.data)
+    },
+    onError: (err) => {
+      toast.error(err.response.data)
+    }
+  })
 
 
-
-  // const [loginUser, { loading, error: loginErr }] = useMutation(LOGIN_USER, {
-  //   onCompleted: (res) => {
-  //     const userRole = res.loginUser.user.role;
-  //     if (userRole !== "company-owner" && userRole !== "company-employee" && userRole !== "company-manager") {
-  //       toast.error('Access Denied');
-  //       return;
-  //     }
-  //     localStorage.setItem("lunsjavtale", res.loginUser.access);
-  //     toast.success('Login Success!');
-  //     window.location.href = "/dashboard";
-  //   },
-  //   onError: (err) => {
-  //     if (err.graphQLErrors && err.graphQLErrors.length > 0) {
-  //       const errorCode = err.graphQLErrors[0].extensions.code;
-  //       const errorMessage = err.graphQLErrors[0].extensions.message;
-  //       toast.error(errorMessage)
-  //       if (errorCode === 'email_not_verified') {
-  //         setEmailNotReceivedSecOpen(true)
-  //       }
-  //     }
-  //   },
-  // });
-
-
-  //google login
-  // const [googleLogin, { GoogleLoginloading, }] = useMutation(SOCIAL_LOGIN, {
-  //   onCompleted: (res) => {
-  //     localStorage.setItem("lunsjavtale", res.socialLogin.access);
-  //     toast.success('Login Success!');
-  //     window.location.href = "/dashboard";
-  //   },
-  //   onError: (err) => {
-  //     toast.error(err.message)
-  //   },
-  // });
-
-
-  // const googleLoginHandler = (res) => {
-  //   try {
-  //     const decodedToken = jwtDecode(res.credential);
-  //     googleLogin({
-  //       variables: {
-  //         email: decodedToken.email,
-  //         socialId: decodedToken.sub
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.error('Error decoding token or during login:', error);
-  //     toast.error('Failed to login with Google');
-  //   }
-  // };
+  const handleResendMail = () => {
+    resendEmailMutation.mutate({ email: payload.email })
+  }
 
   const handleInputChange = (e) => {
     setPayloadError({ ...payloadError, [e.target.name]: '' });
     setPayload({ ...payload, [e.target.name]: e.target.value })
   }
 
-  // const handleLogin = () => {
-  //   if (!payload.email) {
-  //     setPayloadError({ ...payloadError, email: 'Please enter email!' });
-  //     return;
-  //   }
-  //   if (!payload.password) {
-  //     setPayloadError({ ...payloadError, password: 'Please enter password!' })
-  //     return;
-  //   }
-  //   if (loginErr) toast.error('SomeThing went wrong!')
-  //   loginUser({ variables: payload })
-  // }
 
-  // const handleKeyPress = (e) => {
-  //   if (e.key === 'Enter') {
-  //     handleLogin()
-  //   }
-  // }
+  const handleLogin = () => {
+    if (!payload.email) {
+      setPayloadError({ ...payloadError, email: 'Please enter email!' });
+      return;
+    }
+    if (!payload.password) {
+      setPayloadError({ ...payloadError, password: 'Please enter password!' })
+      return;
+    }
+    mutation.mutate(payload)
+  }
 
-
-
-  // const [resendMail] = useMutation(SEND_VERIFICATION_MAIL, {
-  //   onCompleted: (res) => {
-  //     const { message, success } = res.sendVerificationMail;
-  //     toast.success(message)
-  //   },
-  //   onError: (res) => {
-  //     toast.error(res.message)
-  //   }
-  // });
-
-  // const handleResendMail = () => {
-  //   resendMail({
-  //     variables: {
-  //       email: payload.email
-  //     }
-  //   })
-  //   setDisableResendBtn(true)
-  //   setTimeout(() => {
-  //     setDisableResendBtn(false)
-  //   }, 50000);
-  // };
-
-
-
-  // const [passwordReset, { loading: passResetLoading, data: passResetData }] = useMutation(PASSWORD_RESET, {
-  //   onCompleted: (res) => {
-  //     // toast.success(res.passwordResetMail.message)
-  //     setForgotEmail({ email: '' })
-  //   },
-  //   onError: (err) => {
-  //     toast.error(err.message)
-  //   }
-  // });
-
-  // const handleForgotePassword = () => {
-  //   if (!forgotEmail.email) {
-  //     toast.error('Please enter your email!')
-  //     return;
-  //   }
-  //   passwordReset({
-  //     variables: {
-  //       email: forgotEmail.email
-  //     }
-  //   })
-  // }
-
-  const passResetData = ''
-
-  const passwordVisibilityHandler = () => setPasswordVisibility(!passwordVisibility);
-
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin()
+    }
+  }
 
   return (
     <Container sx={{
@@ -194,155 +125,113 @@ const SignIn = (props) => {
           ut labore et dolore magna aliqua. Ut enim ad minim veniam.</Typography>
       </Stack>
       <Stack alignItems='center' sx={{ width: { xs: '100%', md: '50%' } }}>
-        {
-          forgotePassSecOpen ? (
-            <Stack sx={{
-              width: { xs: '100%', md: '480px' },
-              justifyContent: 'center',
+        <Stack sx={{
+          width: { xs: '100%', md: '480px' },
+          justifyContent: 'center',
+        }}>
+          <Stack sx={{ width: '100%', display: { xs: 'none', md: 'flex' } }} direction='row' alignItems='center' justifyContent={'space-between'} mb={4}>
+            <Box sx={{
+              width: { xs: '70%', md: '200px' },
+              mb: 2
             }}>
-              <Stack sx={{ width: '100%' }} direction='row' alignItems='center' justifyContent={'space-between'}>
+              <Typography sx={{ fontSize: '35px', color: 'primary.main', fontWeight: 600 }}>Edu-Quest</Typography>
+              {/* <img width='100%' src="logo.svg" alt="" /> */}
+            </Box>
+            <Link to='/'>
+              <Button sx={{
+                color: 'primary.main',
+                mb: 2,
+              }} startIcon={<KeyboardArrowLeft />}> Back to Home </Button>
+            </Link>
+          </Stack>
+          <TextField
+            onChange={handleInputChange}
+            name='email'
+            value={payload.email}
+            error={payloadError.email !== ''}
+            helperText={payloadError && payloadError.email}
+            sx={{ mb: 2 }}
+            fullWidth
+            label="Email"
+            variant="standard"
+            onKeyDown={handleKeyPress}
+          />
+          <TextField
+            sx={{ mb: 1 }}
+            variant="standard"
+            type={passwordVisibility ? "text" : "password"}
+            name="password"
+            label="Password"
+            fullWidth
+            value={payload.password}
+            error={payloadError.password !== ""}
+            helperText={payloadError && payloadError.password}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setPasswordVisibility(!passwordVisibility)}
+                    edge="end"
+                  >
+                    {passwordVisibility ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
-                <Button onClick={() => setForgotePassSecOpen(false)} sx={{
-                  color: 'gray',
-                  fontSize: '22px',
-                  mb: 2,
-                }} startIcon={<KeyboardArrowLeft />}>Back</Button>
-              </Stack>
-              {
-                passResetData ?
-                  <Typography sx={{
-                    bgcolor: 'light.main',
-                    borderRadius: '8px',
-                    px: 2, py: 1, color: 'primary.main'
-                  }}>{passResetData.passwordResetMail.message}</Typography> :
-                  <Stack>
-                    <Typography sx={{ fontWeight: 600, fontSize: '25px', mb: 3 }}>Forgote Password?</Typography>
-                    <Input value={forgotEmail.email} sx={{ mb: 2 }} placeholder='Enter Your Email' onChange={(e) => setForgotEmail({ email: e.target.value })} type="text" />
-                    {/* <TextField onChange={(e)=> setForgotEmail(e.target.value)} sx={{ mb: 2 }} fullWidth placeholder='email address' variant="outlined" /> */}
-                    <Button
-                      // isLoading={passResetLoading} 
-                      // disable={passResetLoading} 
-                      // onClick={handleForgotePassword}
-                      variant='contained'
-                    >Send
-                    </Button>
-                  </Stack>
-              }
-            </Stack>
-
-          ) : (
-            <Stack sx={{
-              width: { xs: '100%', md: '480px' },
-              justifyContent: 'center',
+          <Link className='link' to='/forgot-password'>
+            <Typography onClick={() => setForgotePassSecOpen(true)} sx={{ fontSize: '15px', mt: 1, mb: 2, color: 'primary.main ', cursor: 'pointer' }}>
+              Forgote Password?
+            </Typography>
+          </Link>
+          {emailNotReceivedSecOpen &&
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              padding: '16px 24px',
+              bgcolor: 'light.main',
+              borderRadius: '8px',
+              fontSize: '18px',
+              color: 'primary.main',
+              textAlign: 'center'
             }}>
-              <Stack sx={{ width: '100%', display: { xs: 'none', md: 'flex' } }} direction='row' alignItems='center' justifyContent={'space-between'} mb={4}>
-                <Box sx={{
-                  width: { xs: '70%', md: '200px' },
-                  mb: 2
-                }}>
-                  <Typography sx={{ fontSize: '35px', color: 'primary.main', fontWeight: 600 }}>Edu-Quest</Typography>
-                  {/* <img width='100%' src="logo.svg" alt="" /> */}
-                </Box>
-                <Link to='/'>
-                  <Button sx={{
-                    color: 'primary.main',
-                    mb: 2,
-                  }} startIcon={<KeyboardArrowLeft />}> Back to Home </Button>
-                </Link>
-              </Stack>
-              <Typography sx={{ fontWeight: 600, fontSize: '25px', mb: 3 }}>Sign into Your Account</Typography>
-              <TextField
-                onChange={handleInputChange}
-                name='email'
-                value={payload.email}
-                error={payloadError.email !== ''}
-                helperText={payloadError && payloadError.email}
-                sx={{ mb: 2 }}
-                fullWidth
-                label="Email"
-                variant="standard"
-              // onKeyDown={handleKeyPress}
-              />
-              <TextField
-                sx={{ mb: 1 }}
-                variant="standard"
-                type={passwordVisibility ? "text" : "password"}
-                name="password"
-                label="Password"
-                fullWidth
-                value={payload.password}
-                error={payloadError.password !== ""}
-                helperText={payloadError && payloadError.password}
-                onChange={handleInputChange}
-                // onKeyDown={handleKeyPress}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={passwordVisibilityHandler}
-                        onMouseDown={passwordVisibilityHandler}
-                        edge="end"
-                      >
-                        {passwordVisibility ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Stack direction='row' justifyContent='space-between'>
-                {/* <FormControlLabel control={<Checkbox />} label="Remember me" /> */}
-                <Typography onClick={() => setForgotePassSecOpen(true)} sx={{ fontSize: '15px', mb: 4, mt: 1, alignSelf: 'center', color: 'primary.main ', cursor: 'pointer' }}>Forgote Password?</Typography>
-              </Stack>
-              {emailNotReceivedSecOpen &&
-                <Box sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  padding: '8px 24px',
-                  bgcolor: 'light.main',
-                  borderRadius: '8px',
-                  fontSize: '18px',
-                  color: 'primary.main',
-                  my: 3
-                }}>
-                  <Typography >Don't get email?</Typography>
-                  <Button
-                  // onClick={handleResendMail}
-                  //  disabled={disableResendBtn}
-                  > Send again
-                  </Button>
-
-                </Box>
-              }
-              <Link to='/dashboard'>
-                <Button style={{ mb: 2, width: '100%' }}
-                  //  onClick={handleLogin}
-                  //  isLoading={loading} 
-                  variant='contained'
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Box sx={{ width: '100%' }}>
-                {/* <GoogleLogin
+              <Typography sx={{ mb: 1, color: 'coral' }}>Email not verified!</Typography>
+              <Typography variant='body2'>Didn't receive the verification email?</Typography>
+              <Typography variant='body2' sx={{ color: 'gray' }}>Please check your spam folder or click the button below to resend the email.</Typography>
+              <Button
+                color="primary"
+                onClick={handleResendMail}
+              // disabled={disableResendBtn}
+              >
+                Resend Email
+              </Button>
+            </Box>
+          }
+          <CButton style={{ mb: 2, width: '100%' }}
+            onClick={handleLogin}
+            loading={mutation.isPending}
+            variant='contained'
+          >
+            Sign In
+          </CButton>
+          <Box sx={{ width: '100%' }}>
+            {/* <GoogleLogin
                   onSuccess={res => googleLoginHandler(res)}
                   onError={() => {
                     toast.error('Innlogging mislyktes');
                   }}
                 /> */}
-              </Box>
+          </Box>
 
-              {/* <CButton startIcon={<Google />} variant='outlined' style={{ mt: 2 }}>Logg inn med Google</CButton> */}
-              <Box sx={{ display: 'inline-flex', alignSelf: 'center', mt: 2 }}>
-                <Typography sx={{ whiteSpace: 'nowrap', fontSize: { xs: '14px', md: '16px' } }}>New User?</Typography>
-                <Link style={{ textDecoration: 'none' }} to='/signup'>
-                  <Typography sx={{ whiteSpace: 'nowrap', fontSize: { xs: '14px', md: '16px' }, color: 'primary.main', ml: 1 }}>Create an Account</Typography>
-                </Link>
-              </Box>
-            </Stack>
-          )
-        }
+          <CButton startIcon={<Google />} variant='outlined'>Login with Google</CButton>
+          <Typography sx={{ mt: 2, textAlign: 'center' }}>New User? <Link to='/signup' style={{ color: 'primary.main' }}>Create an Account</Link></Typography>
+        </Stack>
       </Stack>
     </Container>
 

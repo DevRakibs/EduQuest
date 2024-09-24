@@ -6,25 +6,27 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import CDrawer from './CDrawer';
 import { useState } from 'react';
-import { Avatar, Divider, FormControlLabel, Stack, Switch } from '@mui/material';
-import { Logout } from '@mui/icons-material';
+import { Avatar, Badge, ClickAwayListener, Divider, Grow, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
+import { Logout, NotificationsNone, PersonOutline, SettingsOutlined } from '@mui/icons-material';
 import BreadCrumb from '../../common/BreadCrumb';
-import { useUserContext } from '../../context/UserProvider';
+import useAuth from '../../hook/useAuth';
+import useUser from '../../hook/useUser';
+import SlideDrawer from '../../common/SlideDrawer';
 
 const drawerWidth = 280;
 
 function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
 
-  const { user, setUser } = useUserContext()
+  const { logout } = useAuth()
+  const { user } = useUser()
 
-  const handleSwitch = (e) => {
-    setUser({ me: { role: e.target.checked ? 'instructor' : 'student' } })
-  }
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -38,6 +40,13 @@ function Layout() {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
     }
+  };
+
+  const toggleNotificationDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setNotificationDrawerOpen(open);
   };
 
   return (
@@ -65,14 +74,61 @@ function Layout() {
           >
             <MenuIcon />
           </IconButton>
-          <FormControlLabel control={<Switch onChange={handleSwitch} />} label="Instructor" />
           <Box />
-          <Stack direction='row' gap={2}>
-            <Avatar />
-            <IconButton>
-              <Logout />
-              <Typography sx={{ ml: 1 }}>Logout</Typography>
+          <Stack direction='row' alignItems='center' gap={2}>
+            <IconButton onClick={toggleNotificationDrawer(true)}>
+              <Badge badgeContent={9} color='warning'>
+                <NotificationsNone />
+              </Badge>
             </IconButton>
+            <ClickAwayListener onClickAway={() => setUserMenuOpen(false)}>
+              <Stack onClick={() => setUserMenuOpen(p => !p)} sx={{ cursor: 'pointer', userSelect: 'none' }} direction='row' gap={1}>
+                <Avatar />
+                <Box>
+                  <Typography sx={{ fontWeight: 600 }}>{user?.username}</Typography>
+                  <Typography sx={{ fontSize: '12px' }}>{user?.role}</Typography>
+                </Box>
+              </Stack>
+            </ClickAwayListener>
+            {/* user menu */}
+            <Grow in={userMenuOpen}>
+              <Box sx={{
+                position: 'absolute',
+                top: 70,
+                right: 5,
+                bgcolor: '#fff',
+                width: '200px',
+                borderRadius: '4px',
+                boxShadow: 2
+              }}>
+                <Stack gap={2} p={2}>
+                  <Link to='profile' className='link'>
+                    <ListItem disablePadding>
+                      <ListItemIcon sx={{ minWidth: '30px' }}>
+                        <PersonOutline fontSize='small' />
+                      </ListItemIcon>
+                      <Typography sx={{ fontSize: '14px' }}>View Profile</Typography>
+                    </ListItem>
+                  </Link>
+                  <Link to='settings' className='link'>
+                    <ListItem disablePadding>
+                      <ListItemIcon sx={{ minWidth: '30px' }}>
+                        <SettingsOutlined fontSize='small' />
+                      </ListItemIcon>
+                      <Typography sx={{ fontSize: '14px' }}>Account Settings</Typography>
+                    </ListItem>
+                  </Link>
+                </Stack>
+                <Divider />
+                <ListItemButton onClick={logout}>
+                  <ListItemIcon sx={{ minWidth: '30px' }}>
+                    <Logout fontSize='small' />
+                  </ListItemIcon>
+                  <ListItemText>Log out</ListItemText>
+                </ListItemButton>
+              </Box>
+            </Grow>
+            {/* user menu end */}
           </Stack>
         </Toolbar>
         <Divider />
@@ -82,7 +138,6 @@ function Layout() {
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -121,6 +176,16 @@ function Layout() {
           <Outlet />
         </Box>
       </Box>
+      <SlideDrawer
+        anchor="right"
+        open={notificationDrawerOpen}
+        toggleDrawer={toggleNotificationDrawer}
+      >
+        <Box sx={{ width: 300, p: 2 }}>
+          <Typography variant="h6">Notifications</Typography>
+          {/* Add your notification list or components here */}
+        </Box>
+      </SlideDrawer>
     </Box>
   );
 }
