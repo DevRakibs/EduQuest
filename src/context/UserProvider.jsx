@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useEffect, useState } from 'react'
-import axiosReq from '../utils/axiosReq'
+import { axiosReq } from '../utils/axiosReq'
 import useAuth from '../hook/useAuth'
 
 

@@ -1,4 +1,4 @@
-import axiosReq from "./axiosReq";
+import {axiosReq} from "./axiosReq";
 
 export const uploadImage = async (img) => {
   try {

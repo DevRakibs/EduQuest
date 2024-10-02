@@ -7,7 +7,7 @@ import CButton from '../../common/CButton';
 import CTextField from '../../common/CTextField';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import axiosReq from '../../utils/axiosReq';
+import { axiosReq } from '../../utils/axiosReq';
 
 const SignUp = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);

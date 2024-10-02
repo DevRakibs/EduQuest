@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Stack, TextField, Typography } from '@mui/material
 import { useEffect, useState } from 'react'
 import CButton from '../../../../common/CButton'
 import CTextField from '../../../../common/CTextField'
-import axiosReq from '../../../../utils/axiosReq'
+import { axiosReq } from '../../../../utils/axiosReq'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import useUser from '../../../../hook/useUser'

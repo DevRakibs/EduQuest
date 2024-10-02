@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import axiosReq from '../utils/axiosReq';
+import { axiosReq } from '../utils/axiosReq';
 import Loader from '../common/Loader';
 import { Box } from '@mui/material';
 

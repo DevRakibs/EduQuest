@@ -6,8 +6,8 @@ import { Google, KeyboardArrowLeft, Visibility, VisibilityOff } from '@mui/icons
 import toast from 'react-hot-toast';
 import CButton from '../../common/CButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosReq from '../../utils/axiosReq';
 import useAuth from '../../hook/useAuth';
+import { axiosReq } from '../../utils/axiosReq';
 
 const SignIn = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -31,21 +31,22 @@ const SignIn = () => {
     mutationFn: (input) => axiosReq.post('/auth/login', input),
     onSuccess: (res) => {
       console.log(res)
-      // if (res.data.user.role === 'student') {
-      //   if (res.data.user.isVerified) {
-      //     setToken(res.data.jwt)
-      //     toast.success(res.data.message)
-      //   } else {
-      //     setEmailNotReceivedSecOpen(true)
-      //     toast.error('Please Verify Your Email')
-      //   }
-      // } else {
-      //   toast.error('Please Login With Student Account')
-      // }
+      toast.success(res.data.message)
+      if (res.data.user.role === 'student') {
+        if (res.data.user.isVerified) {
+          setToken(res.data.jwt)
+          toast.success(res.data.message)
+        } else {
+          setEmailNotReceivedSecOpen(true)
+          toast.error('Please Verify Your Email')
+        }
+      } else {
+        toast.error('Please Login With Student Account')
+      }
     },
     onError: (err) => {
       console.log('err', err)
-      // toast.error(err.response.data)
+      toast.error(err.response.data)
     }
   })
 

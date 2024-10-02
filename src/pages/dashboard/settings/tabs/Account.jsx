@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import CButton from '../../../../common/CButton';
 import { useMutation } from '@tanstack/react-query';
-import axiosReq from '../../../../utils/axiosReq';
+import { axiosReq } from '../../../../utils/axiosReq';
 import useAuth from '../../../../hook/useAuth';
 import { Link } from 'react-router-dom';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import axiosReq from '../../utils/axiosReq'
+import { axiosReq } from '../../utils/axiosReq'
 import toast from 'react-hot-toast'
 import { Box, Button, TextField } from '@mui/material'
 import { Link, useNavigate, useParams } from 'react-router-dom'
