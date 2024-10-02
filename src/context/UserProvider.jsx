@@ -11,16 +11,16 @@ const UserProvider = ({ children }) => {
 
   const { token } = useAuth()
 
-  const { data } = useQuery({
-    enabled: !!token,
-    queryKey: ['user'],
-    queryFn: () => axiosReq.get('/auth/me', { headers: { Authorization: token } }),
-  })
-  useEffect(() => {
-    if (data) {
-      setUser(data.data)
-    }
-  }, [data])
+  // const { data } = useQuery({
+  //   enabled: !!token,
+  //   queryKey: ['user'],
+  //   queryFn: () => axiosReq.get('/auth/me', { headers: { Authorization: token } }),
+  // })
+  // useEffect(() => {
+  //   if (data) {
+  //     setUser(data.data)
+  //   }
+  // }, [data])
 
   return (
     <UserContext.Provider value={{ user }}>
