@@ -30,8 +30,6 @@ const SignIn = () => {
   const mutation = useMutation({
     mutationFn: (input) => axiosReq.post('/auth/login', input),
     onSuccess: (res) => {
-      console.log(res)
-      toast.success(res.data.message)
       if (res.data.user.role === 'student') {
         if (res.data.user.isVerified) {
           setToken(res.data.jwt)
@@ -45,7 +43,6 @@ const SignIn = () => {
       }
     },
     onError: (err) => {
-      console.log('err', err)
       toast.error(err.response.data)
     }
   })
