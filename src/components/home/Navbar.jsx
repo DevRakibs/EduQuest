@@ -3,6 +3,7 @@ import { Box, Button, ClickAwayListener, Container, IconButton, Stack, Typograph
 import React, { useState, useMemo } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import useIsMobile from '../../hook/useIsMobile';
+import useAuth from '../../hook/useAuth';
 
 const navlinks = ['Home', 'Course', 'Resource', 'Blog', 'Contact']
 
@@ -10,7 +11,8 @@ const Navbar = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const { pathname } = useLocation();
   const isMobile = useIsMobile();
-  const token = ''; // Example token, replace with actual logic
+
+  const { token } = useAuth()
 
   const handleNavClose = () => setSideBarOpen(false);
 

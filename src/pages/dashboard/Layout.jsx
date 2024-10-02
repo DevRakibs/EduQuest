@@ -77,7 +77,7 @@ function Layout() {
           <Box />
           <Stack direction='row' alignItems='center' gap={2}>
             <IconButton onClick={toggleNotificationDrawer(true)}>
-              <Badge badgeContent={9} color='warning'>
+              <Badge badgeContent={0} color='warning'>
                 <NotificationsNone />
               </Badge>
             </IconButton>
