@@ -9,21 +9,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../../hook/useAuth';
 import { axiosReq } from '../../utils/axiosReq';
 
-const SignIn = () => {
+const StudentLogin = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [forgotePassSecOpen, setForgotePassSecOpen] = useState(false);
   const [payload, setPayload] = useState({ email: '', password: '' });
   const [payloadError, setPayloadError] = useState({ email: "", password: "" });
   const [emailNotReceivedSecOpen, setEmailNotReceivedSecOpen] = useState(false);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setEmailNotReceivedSecOpen(true);
-  //   }, 10000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
+  const [disableResendBtn, setDisableResendBtn] = useState(false);
 
   const { setToken } = useAuth()
 
@@ -184,7 +176,7 @@ const SignIn = () => {
           />
 
           <Link className='link' to='/forgot-password'>
-            <Typography onClick={() => setForgotePassSecOpen(true)} sx={{ fontSize: '15px', mt: 1, mb: 2, color: 'primary.main ', cursor: 'pointer' }}>
+            <Typography sx={{ fontSize: '15px', mt: 1, mb: 2, color: 'primary.main ', cursor: 'pointer' }}>
               Forgote Password?
             </Typography>
           </Link>
@@ -206,8 +198,12 @@ const SignIn = () => {
               <Typography variant='body2' sx={{ color: 'gray' }}>Please check your spam folder or click the button below to resend the email.</Typography>
               <Button
                 color="primary"
-                onClick={handleResendMail}
-              // disabled={disableResendBtn}
+                onClick={() => {
+                  handleResendMail();
+                  setDisableResendBtn(true);
+                  setTimeout(() => setDisableResendBtn(false), 30000);
+                }}
+                disabled={disableResendBtn}
               >
                 Resend Email
               </Button>
@@ -231,6 +227,7 @@ const SignIn = () => {
 
           <CButton startIcon={<Google />} variant='outlined'>Login with Google</CButton>
           <Typography sx={{ mt: 2, textAlign: 'center' }}>New User? <Link to='/signup' style={{ color: 'primary.main' }}>Create an Account</Link></Typography>
+          <Typography sx={{ mt: 2, textAlign: 'center' }}>Instructor <Link to='/instructor/login' style={{ color: 'primary.main' }}>login</Link></Typography>
         </Stack>
       </Stack>
     </Container>
@@ -238,4 +235,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default StudentLogin

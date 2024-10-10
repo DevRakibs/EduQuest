@@ -70,11 +70,6 @@ const Account = () => {
     });
   }
 
-  const handleForgotPassword = () => {
-    // Implement forgot password logic here
-    toast.success('Forgot password logic not implemented yet!')
-  }
-
   return (
     <Stack>
       <Typography variant='h5' mb={1}>Account Settings</Typography>
@@ -122,7 +117,7 @@ const Account = () => {
         />
         {passwordErr && <Typography sx={{ fontSize: '14px', my: 1, color: 'red' }}>{passwordErr}</Typography>}
         <Link to='/forgot-password'>
-          <Button disabled={!editOn} onClick={handleForgotPassword} sx={{ width: 'fit-content', mt: 3 }}>Forget Password?</Button>
+          <Button disabled={!editOn} sx={{ width: 'fit-content', mt: 3 }}>Forget Password?</Button>
         </Link>
         <Stack direction='row' mt={2} justifyContent='space-between'>
           <Box></Box>

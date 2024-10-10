@@ -13,7 +13,7 @@ import Contact from './pages/contact/Contact'
 import Dashboard from './pages/dashboard/dashboard/Dashboard'
 import Layout from './pages/dashboard/Layout'
 import ContactTop from './components/ContactTop'
-import SignIn from './pages/signin/SignIn'
+import StudentLogin from './pages/signin/StudentLogin'
 import SignUp from './pages/signup/Signup'
 import Setting from './pages/dashboard/settings/Setting'
 import AllCourse from './pages/dashboard/allCourse/AllCourse'
@@ -21,12 +21,13 @@ import VerifyEmail from './verifyEmail/VerifyEmail'
 import useAuth from './hook/useAuth'
 import useUser from './hook/useUser'
 import MyCourse from './pages/dashboard/myCourse/MyCourse'
-import AddCourse from './pages/dashboard/myCourse/AddCourse'
 import EnrolledCourse from './pages/dashboard/enrolledCourse/EnrolledCourse'
 import LearnCourse from './pages/dashboard/enrolledCourse/LearnCourse'
 import ForgotePass from './pages/forgotePass/ForgotePass'
 import PasswordReset from './pages/password-reset/PasswordReset'
 import Profile from './pages/dashboard/profile/Profile'
+import InstructorLogin from './pages/signin/InstructorLogin'
+import MyCourseDetails from './pages/dashboard/myCourse/MyCourseDetails'
 
 const HomeLayout = () => {
   return (
@@ -59,7 +60,8 @@ function App() {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path='/signin' element={token ? <Navigate to="/dashboard" /> : <SignIn />} />
+        <Route path='/signin' element={token ? <Navigate to="/dashboard" /> : <StudentLogin />} />
+        <Route path='/instructor/login' element={token ? <Navigate to="/dashboard" /> : <InstructorLogin />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='forgot-password' element={<ForgotePass />} />
         <Route path='password-reset/:token' element={<PasswordReset />} />
@@ -75,18 +77,18 @@ function App() {
         </Route>
         <Route path='/dashboard' element={token ? <Layout /> : <Navigate to="/signin" />}>
           <Route index element={<Dashboard />} />
-          <Route path='all-course' element={<AllCourse />} />
           {
             instructor &&
             <>
               <Route path='my-course' element={<MyCourse />} />
-              <Route path='my-course/add' element={<AddCourse />} />
+              <Route path='my-course/:id' element={<MyCourseDetails />} />
             </>
           }
           <Route path='profile' element={<Profile />} />
           {
             student &&
             <>
+              <Route path='all-course' element={<AllCourse />} />
               <Route path='enrolled' element={<EnrolledCourse />} />
               <Route path='enrolled/:id' element={<LearnCourse />} />
             </>

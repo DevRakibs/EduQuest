@@ -83,7 +83,7 @@ function Layout() {
             </IconButton>
             <ClickAwayListener onClickAway={() => setUserMenuOpen(false)}>
               <Stack onClick={() => setUserMenuOpen(p => !p)} sx={{ cursor: 'pointer', userSelect: 'none' }} direction='row' gap={1}>
-                <Avatar />
+                <Avatar src={user?.img ?? ''} />
                 <Box>
                   <Typography sx={{ fontWeight: 600 }}>{user?.username}</Typography>
                   <Typography sx={{ fontSize: '12px' }}>{user?.role}</Typography>

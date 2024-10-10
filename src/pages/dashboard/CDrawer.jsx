@@ -5,50 +5,6 @@ import { Link, NavLink } from 'react-router-dom';
 import useUser from '../../hook/useUser';
 import { useState } from 'react';
 
-const LinkBtn = ({ style, hidden, end, text, icon, link, onClick, expandIcon, expand, subItem, notification }) => {
-  return (
-    <NavLink style={{ display: hidden ? 'none' : 'flex', }} end={end} onClick={onClick} className='link' to={link}>
-      {
-        ({ isActive }) => (
-          <Box sx={{
-            width: '200px',
-            whiteSpace: 'nowrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '8px 12px',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            bgcolor: !expandIcon && isActive ? 'primary.main' : '',
-            ...style,
-            position: 'relative',
-            cursor: 'pointer',
-            ":hover": {
-              color: isActive ? '' : '#fff'
-            }
-          }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', color: !expandIcon && isActive ? '#fff' : 'text.main' }}>
-              {subItem ?
-                <FiberManualRecord sx={{ fontSize: '13px' }} /> :
-                icon
-              }
-              <Typography sx={{
-                fontSize: subItem ? '12px' : '15px',
-                fontWeight: 400, ml: 1
-              }}>{text}</Typography>
-            </Box>
-            {notification && <Badge sx={{ mr: .5 }} badgeContent={notification} color="error" />}
-            {expandIcon && <KeyboardArrowRight sx={{
-              transition: '.3s ease',
-              transform: expand ? 'rotate(90deg)' : 'rotate(0deg)'
-            }} />}
-          </Box>
-        )
-      }
-    </NavLink>
-  )
-};
-
-
 const CDrawer = ({ drawerClose }) => {
   const [expandedNavlinkIndex, setExpandedNavlinkIndex] = useState(null);
 
@@ -64,11 +20,11 @@ const CDrawer = ({ drawerClose }) => {
   const links = [
     { name: 'Dashboard', icon: <SpaceDashboardOutlined fontSize='small' />, path: '', end: true },
     { name: 'My Profile', icon: <PersonOutlineOutlined fontSize='small' />, path: 'profile' },
-    { name: 'All Course', icon: <Assignment fontSize='small' />, path: 'all-course' },
     ...(user ? (
       isInstructor ? [
         { name: 'My Course', icon: <LibraryAddOutlined fontSize='small' />, path: 'my-course' },
       ] : [
+        { name: 'All Course', icon: <Assignment fontSize='small' />, path: 'all-course' },
         { name: 'Enrolled Course', icon: <SchoolOutlined fontSize='small' />, path: 'enrolled' },
       ]
     ) : []),
@@ -84,7 +40,7 @@ const CDrawer = ({ drawerClose }) => {
           bgcolor: 'primary.main',
           height: '100px'
         }} />
-        <Avatar sx={{
+        <Avatar src={user?.img ?? ''} sx={{
           width: '100px',
           height: '100px',
           marginTop: -6.5

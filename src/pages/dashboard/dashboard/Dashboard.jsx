@@ -3,6 +3,11 @@ import React from 'react'
 import CourseCard from '../../../components/CourseCard'
 import CourseCardSmall from '../../../components/CourseCardSmall'
 import useUser from '../../../hook/useUser'
+import useAuth from '../../../hook/useAuth'
+import { useQuery } from '@tanstack/react-query'
+import { axiosReq } from '../../../utils/axiosReq'
+import Loader from '../../../common/Loader'
+import ErrorMsg from '../../../common/ErrorMsg'
 
 const cardStyle = {
   box: {
@@ -25,6 +30,11 @@ const cardStyle = {
 
 const Dashboard = () => {
   const { user } = useUser()
+  const { token } = useAuth()
+  const { data: courses, isLoading, isError } = useQuery({
+    queryKey: ['recentCourse'],
+    queryFn: () => axiosReq.get('/course/instructor/recent', { headers: { Authorization: token } })
+  })
   return (
     <Box sx={{
       bgcolor: '#fff',
@@ -71,11 +81,12 @@ const Dashboard = () => {
       </Typography>
       <Stack direction={{ xs: 'column', md: 'row' }} gap={4} flexWrap='wrap'>
         {
-          [1, 2].map((item, id) => (
-            <Box key={id} mt={2}>
-              <CourseCardSmall />
-            </Box>
-          ))
+          isLoading ? <Loader /> : isError ? <ErrorMsg /> :
+            courses?.data?.map((item, id) => (
+              <Box key={id} mt={2}>
+                <CourseCardSmall data={item} />
+              </Box>
+            ))
         }
       </Stack>
 
