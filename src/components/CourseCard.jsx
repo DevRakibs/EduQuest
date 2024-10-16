@@ -3,7 +3,8 @@ import { Box, Button, Chip, List, ListItem, Stack, Typography } from "@mui/mater
 import { Link } from "react-router-dom";
 import CButton from "../common/CButton";
 
-const CourseCard = () => {
+const CourseCard = ({ data }) => {
+
   return (
     <Stack sx={{
       width: { xs: '100%', sm: '470px' },
@@ -20,7 +21,7 @@ const CourseCard = () => {
         borderRadius: '16px',
         overflow: 'hidden'
       }}>
-        <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/course-01.jpg" alt="" />
+        <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={data?.cover || '/no-image.png'} alt="" />
       </Box>
       {/* <Typography sx={{
         position: 'absolute',
@@ -40,13 +41,14 @@ const CourseCard = () => {
           width: 'fit-content',
           bgcolor: '#DCFCE7',
           borderRadius: '8px',
-        }}>Development</Typography>
-        <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', mb: 1.5 }}>Wordpress Advance to Marketplace</Typography>
+        }}>{data?.category?.name}</Typography>
+        <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', mb: 1.5 }}>{data?.title}</Typography>
         <Stack direction='row' gap={1} flexWrap='wrap' mb={2}>
-          <Chip icon={<KeyboardDoubleArrowRight fontSize='small' />} label="২৮ টি  লাইভ ক্লাস" variant="outlined" />
-          <Chip icon={<KeyboardDoubleArrowRight fontSize='small' />} label="১০ টি  প্রজেক্টস" variant="outlined" />
-          <Chip icon={<KeyboardDoubleArrowRight fontSize='small' />} label="২৫ দিন বাকি" variant="outlined" />
-          <Chip icon={<KeyboardDoubleArrowRight fontSize='small' />} label="৪৮ টি প্রি রেকর্ডেড ভিডিও" variant="outlined" />
+          {
+            data?.includes?.map((item, id) => (
+              <Chip key={id} icon={<KeyboardDoubleArrowRight fontSize='small' />} label={item} variant="outlined" />
+            ))
+          }
         </Stack>
         {/* <Stack direction='row' gap={2} mt={1} justifyContent='space-between'>
           <ListItem sx={{ pl: 0 }}>
@@ -59,7 +61,7 @@ const CourseCard = () => {
           </ListItem>
         </Stack> */}
         <Stack direction='row' gap={2} justifyContent='space-between' mt={1}>
-          <Link to='/course/32'>
+          <Link to={`/course/${data?._id}`}>
             <CButton contained rounded style={{ width: '150px' }}> বিস্তারিত</CButton>
           </Link>
           <CButton rounded outlined>Enrole Now</CButton>

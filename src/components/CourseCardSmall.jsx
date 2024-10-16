@@ -52,8 +52,6 @@ const CourseCardSmall = ({ data }) => {
 
   const handleDialog = () => setEditDialogOpen(false);
 
-  const totalLesson = data?.content?.reduce((acc, curr) => acc + (curr?.content?.length || 0), 0) || 0;
-
   return (
     <Stack justifyContent='space-between' sx={{
       width: { xs: '100%', sm: '270px' },
@@ -78,34 +76,33 @@ const CourseCardSmall = ({ data }) => {
             objectFit: 'cover',
           }} src={data?.cover || '/no-image.png'} alt="" />
         </Box>
-        <Stack sx={{ m: 1.5 }}>
-          <Typography variant="body" sx={{
-            fontSize: '14px',
-            px: 1,
-            mb: 1,
-            width: 'fit-content',
-            bgcolor: '#DCFCE7',
-            borderRadius: '8px',
-          }}>{data?.category?.name}</Typography>
-          <Link className="link" to='/course/234'>
-            <Typography sx={{ fontSize: '16px', lineHeight: '20px', fontWeight: '600' }}>{data?.title}</Typography>
-          </Link>
+        <Stack sx={{ m: 1.5, }} justifyContent='space-between'>
+          <Box>
+            <Typography variant="body" sx={{
+              fontSize: '14px',
+              px: 1,
+              mb: 1,
+              width: 'fit-content',
+              bgcolor: '#DCFCE7',
+              borderRadius: '8px',
+            }}>{data?.category?.name}
+            </Typography>
+            <Typography sx={{ fontSize: '16px', my: 1, lineHeight: '20px', fontWeight: '600' }}>{data?.title}</Typography>
+          </Box>
           {user && (
             user?.role === 'student' ?
               <Box>
-                <Box sx={{ width: '100%', my: 2 }}>
+                {/* <Box sx={{ width: '100%', my: 2 }}>
                   <LinearProgressWithLabel value={progress} />
-                </Box>
-                <Link to='/dashboard/enrolled/525372'>
+                </Box> */}
+                <Link to={`/dashboard/enrolled/${data?._id}`}>
                   <Button variant="outlined" sx={{ width: '100%', borderRadius: '50px' }} size='small'>Continue Watching</Button>
                 </Link>
               </Box> :
               <Box>
                 <Stack direction='row' gap={2} mt={.5} justifyContent='space-between'>
-                  <ListItem sx={{ pl: 0 }}>
-                    <ImportContacts fontSize="small" />
-                    <Typography sx={{ fontSize: '12px', whiteSpace: 'nowrap', ml: 1 }}>{totalLesson} Lesson</Typography>
-                  </ListItem>
+                  <Chip size="small" sx={{ px: 1 }} label={data?.status} color={data?.status === 'active' ? 'success' : data?.status === 'pending' ? 'warning' : 'default'} />
+
                   {/* <ListItem sx={{ pr: 0 }}>
                   <AccessTime fontSize="small" />
                   <Typography sx={{ fontSize: '12px', whiteSpace: 'nowrap', ml: 1 }}>40hr 10min</Typography>
@@ -116,12 +113,16 @@ const CourseCardSmall = ({ data }) => {
           }
         </Stack>
       </Box>
-      <Stack sx={{ mx: 1.5, mb: 1.5 }} direction='row' justifyContent='space-between'>
-        <Link className="link" to={`/dashboard/my-course/${data?._id}`}>
-          <CButton endIcon={<ArrowRightAlt />} >Details</CButton>
-        </Link>
-        <CButton onClick={() => setEditDialogOpen(true)} outlined startIcon={<Edit fontSize="small" />} >Edit</CButton>
-      </Stack>
+      {
+        user?.role === 'instructor' && (
+          <Stack sx={{ mx: 1.5, mb: 1.5 }} direction='row' justifyContent='space-between'>
+            <Link className="link" to={`/dashboard/my-course/${data?._id}`}>
+              <CButton endIcon={<ArrowRightAlt />} >Details</CButton>
+            </Link>
+            <CButton onClick={() => setEditDialogOpen(true)} outlined startIcon={<Edit fontSize="small" />} >Edit</CButton>
+          </Stack>
+        )
+      }
       {/* edit course */}
       <CDialog maxWidth='md' open={editDialogOpen} title='Edit Course' onClose={handleDialog}>
         <EditInfo course={data} onClose={handleDialog} />

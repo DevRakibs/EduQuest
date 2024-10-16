@@ -1,9 +1,11 @@
-import { Box, Button, Container, Stack, Typography } from '@mui/material'
-import React from 'react'
+import { Box, Button, Container, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import BreadCrumb from '../../common/BreadCrumb'
 import useIsMobile from '../../hook/useIsMobile'
-import { ContentCopyOutlined, GetAppOutlined, InsertDriveFileOutlined, Person2Outlined } from '@mui/icons-material'
+import { ContentCopyOutlined, DownloadOutlined, GetAppOutlined, InsertDriveFileOutlined, Person2Outlined, Search } from '@mui/icons-material'
 import DataTable from '../../common/DataTable'
+import { useQuery } from '@tanstack/react-query'
+import { axiosReq } from '../../utils/axiosReq'
 
 const data = [
   {
@@ -51,81 +53,69 @@ const data = [
 ]
 
 const Resourse = () => {
+  const [search, setSearch] = useState('')
   const isMobile = useIsMobile()
+
+  const { data: resourses, isLoading } = useQuery({
+    queryKey: ['resourse', search],
+    queryFn: async () => {
+      const res = await axiosReq.get('/resourse/all', {
+        params: {
+          search: search
+        }
+      })
+      return res.data
+    }
+  })
+
   const columns = [
     {
-      field: 'Files', headerName: '', width: 500,
-      renderHeader: () => (
-        <Typography sx={{ fontSize: { xs: '12px', fontWeight: 600, lg: '15px' } }}>Files</Typography>
-      ),
+      field: 'Files', headerName: 'Files', width: 500,
       renderCell: (params) => (
         <Stack sx={{ height: '100%' }} direction='row' gap={1.5} alignItems='center'>
           <img style={{ width: '30px' }} src="/file2.svg" alt="" />
           <Stack >
-            <Typography sx={{ fontSize: '14px' }}>{params.row.title}</Typography>
-            <Stack direction='row' gap={2} alignItems='center'>
-              <Stack direction='row' gap={2}>
-                <Typography sx={{ fontSize: '12px', display: 'inline-flex', gap: .5, alignItems: 'center' }}>
-                  <ContentCopyOutlined sx={{ fontSize: '12px' }} /> 1 files(s)
-                </Typography>
-              </Stack>
-              <Stack direction='row' gap={2}>
-                <Typography sx={{ fontSize: '12px', display: 'inline-flex', gap: .5, alignItems: 'center' }}>
-                  <GetAppOutlined sx={{ fontSize: '12px' }} /> 292 downloads
-                </Typography>
-              </Stack>
-            </Stack>
+            <Typography >{params.row.name}</Typography>
+            {params.row.files && (
+              <Typography sx={{ fontSize: '12px', display: 'inline-flex', gap: .5, alignItems: 'center' }}>
+                <ContentCopyOutlined sx={{ fontSize: '12px' }} /> {params.row.files} files(s)
+              </Typography>
+            )}
           </Stack>
         </Stack>
       )
     },
     {
-      field: 'Categories', headerName: '', width: 200,
-      renderHeader: () => (
-        <Typography sx={{ fontSize: { xs: '12px', fontWeight: 600, lg: '15px' } }}>Categories</Typography>
-      ),
+      field: 'Categories', headerName: 'Categories', width: 250,
       renderCell: (params) => (
         <Stack sx={{ height: '100%' }} direction='row' gap={1} alignItems='center'>
           <Typography>{params.row.category}</Typography>
         </Stack>
       )
     },
+    // {
+    //   field: 'updateOn', headerName: 'Update On', width: 200,
+    //   renderCell: (params) => (
+    //     <Stack sx={{ height: '100%' }} direction='row' gap={1} alignItems='center'>
+    //       <Typography>{params.row.updateOn}</Typography>
+    //     </Stack>
+    //   )
+    // },
     {
-      field: 'updateOn', headerName: '', width: 250,
-      renderHeader: () => (
-        <Typography sx={{ fontSize: { xs: '12px', fontWeight: 600, lg: '15px' } }}>updateOn</Typography>
-      ),
+      field: 'version', headerName: 'Version', width: 200,
       renderCell: (params) => (
-        <Stack sx={{ height: '100%' }} direction='row' gap={1} alignItems='center'>
-          <Typography>{params.row.updateOn}</Typography>
-        </Stack>
-      )
-    },
-    {
-      field: 'version', headerName: '', width: 200,
-      renderHeader: () => (
-        <Typography sx={{ fontSize: { xs: '12px', fontWeight: 600, lg: '15px' } }}>version</Typography>
-      ),
-      renderCell: (params) => (
-        <Stack sx={{ height: '100%' }} direction='row' gap={1} alignItems='center'>
+        <Stack sx={{ height: '100%' }} justifyContent='center'>
           <Typography>{params.row.version}</Typography>
         </Stack>
       )
     },
+
     {
-      field: 'Download', headerName: '',
-      width: isMobile ? 200 : undefined,
-      flex: isMobile ? undefined : 1,
-      renderHeader: () => (
-        <Typography sx={{ fontSize: { xs: '12px', fontWeight: 600, lg: '15px' } }}>Download</Typography>
-      ),
-      renderCell: (params) => (
-        <Stack sx={{ height: '100%' }} direction='row' alignItems='center'>
-          <Button variant='outlined' size='small' sx={{ px: 4 }}>Download</Button>
-        </Stack>
-      )
+      field: 'Download', headerName: '', width: 150,
+      renderCell: (params) => <IconButton onClick={() => window.open(params.row.url, '_blank')} ><DownloadOutlined /></IconButton>
     },
   ];
+
   return (
     <Box>
       <Stack alignItems='center' justifyContent='center' sx={{
@@ -139,10 +129,31 @@ const Resourse = () => {
       </Stack>
 
       <Container maxWidth='xl' sx={{ py: 4 }}>
-        <Typography variant='h5' sx={{ textAlign: 'center' }}>Total Resources: 49</Typography>
+        <Typography variant='h5' sx={{ textAlign: 'center' }}>Total Resources: {resourses?.length}</Typography>
+
+        <Box>
+          <TextField
+            onChange={(e) => setSearch(e.target.value)}
+            size="small"
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
 
         <Box mt={4}>
-          <DataTable columns={columns} rows={data} />
+          <DataTable
+            columns={columns}
+            rows={resourses}
+            rowHeight={70}
+            getRowId={row => row._id}
+            loading={isLoading}
+          />
         </Box>
 
       </Container>

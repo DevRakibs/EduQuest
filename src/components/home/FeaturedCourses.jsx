@@ -6,6 +6,10 @@ import useIsMobile from '../../hook/useIsMobile';
 import { FadeAnimation, SlideAnimation } from '../../common/Animation';
 import { Link } from 'react-router-dom';
 import CourseCard from '../CourseCard';
+import { useQuery } from '@tanstack/react-query';
+import { axiosReq } from '../../utils/axiosReq';
+import Loader from '../../common/Loader';
+import ErrorMsg from '../../common/ErrorMsg';
 
 const ButtonGroup = ({ next, previous, goToSlide, ...rest }) => {
   const { carouselState: { currentSlide } } = rest;
@@ -47,7 +51,13 @@ const responsive = {
 };
 
 const FeaturedCourses = (props) => {
-  const isMobile = useIsMobile()
+  const { data: courses, isLoading, isError } = useQuery({
+    queryKey: ['course'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/course/all')
+      return res?.data.filter(course => course.status === 'active')
+    }
+  })
   return (
     <Box sx={{
       position: 'relative',
@@ -99,11 +109,13 @@ const FeaturedCourses = (props) => {
             deviceType={props.deviceType}
           >
             {
-              [1, 2, 3, 4, 5, 6].map(item => (
-                <Box key={item} mx={1} pb={4} pt={1.5}>
-                  <CourseCard />
-                </Box>
-              ))
+              courses?.length === 0 ? <Typography sx={{ textAlign: 'center', mt: 2 }}>No course found</Typography> :
+                isLoading ? <Loader /> : isError ? <ErrorMsg /> :
+                  courses?.map(item => (
+                    <Box key={item} mx={1} pb={4} pt={1.5}>
+                      <CourseCard data={item} />
+                    </Box>
+                  ))
             }
           </Carousel>
         </Box>

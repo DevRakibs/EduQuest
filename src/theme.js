@@ -14,6 +14,11 @@ export const theme = createTheme({
     },
     bg: '#ECF2FE'
   },
+  mixins: {
+    MuiDataGrid: {
+      containerBackground: '#fbf8ff',
+    },
+  },
   components: {
     MuiButton: {
       styleOverrides: {

@@ -11,7 +11,7 @@ const UserProvider = ({ children }) => {
 
   const { token } = useAuth()
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     enabled: !!token,
     queryKey: ['user'],
     queryFn: () => axiosReq.get('/auth/me', { headers: { Authorization: token } }),
@@ -23,7 +23,7 @@ const UserProvider = ({ children }) => {
   }, [data])
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, isLoading }}>
       {children}
     </UserContext.Provider>
   )

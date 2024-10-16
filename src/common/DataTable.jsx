@@ -1,48 +1,80 @@
 /* eslint-disable react/prop-types */
-import { Box } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
+import { Box, Pagination, PaginationItem, useTheme } from '@mui/material';
+import { DataGrid, useGridApiContext, useGridSelector, gridPageSelector, gridPageCountSelector } from '@mui/x-data-grid';
 
-const DataTable = ({ rows, columns, rowHeight, getRowHeight, checkboxSelection, onRowSelectionModelChange, columnVisibilityModel }) => {
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
   return (
-    <Box sx={{
-      minHeight: '650px',
-      // width: '100%',
-      '& .MuiDataGrid-columnHeader': {
-        backgroundColor: 'primary.main',
-        color: '#fff'
-      },
-    }}>
+    <Pagination
+      color="primary"
+      variant="contained"
+      // shape="rounded"
+      page={page + 1}
+      count={pageCount}
+      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+    />
+  );
+}
+
+const DataTable = ({
+  rows,
+  columns,
+  rowHeight = 52,
+  getRowHeight,
+  checkboxSelection = false,
+  onRowSelectionModelChange,
+  columnVisibilityModel,
+  pageSize = 10,
+  getRowId,
+  pageSizeOptions = [10, 25, 50],
+  noRowsLabel = 'No data available',
+  sx,
+  loading
+}) => {
+
+  return (
+    <Box
+      sx={{ width: { xs: '96vw', md: '100%' } }}
+    >
       <DataGrid
+        sx={{ bgcolor: '#fff', }}
         rows={rows}
         columns={columns}
         autoHeight
-        // rowHeight={rowHeight}
+        loading={loading}
+        getRowId={getRowId}
+        rowHeight={rowHeight}
         getRowHeight={getRowHeight}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10,
+              pageSize,
             },
           },
         }}
         localeText={{
-          noRowsLabel: 'Empty',
+          noRowsLabel,
           footerRowSelected: (count) =>
-            count !== 1
-              ? `${count.toLocaleString()} Selected`
-              : `${count.toLocaleString()} Selected`,
+            `${count.toLocaleString()} Selected`,
         }}
         checkboxSelection={checkboxSelection}
         onRowSelectionModelChange={onRowSelectionModelChange}
         columnVisibilityModel={columnVisibilityModel}
-        pageSizeOptions={[10]}
+        pageSizeOptions={pageSizeOptions}
         disableRowSelectionOnClick
         disableColumnFilter
         disableColumnSorting
         disableColumnMenu
+        slots={{
+          pagination: CustomPagination,
+        }}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default DataTable
+export default DataTable;

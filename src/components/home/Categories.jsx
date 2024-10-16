@@ -1,6 +1,10 @@
 import { Box, Container, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { FadeAnimation, SlideAnimation } from '../../common/Animation'
+import { axiosReq } from '../../utils/axiosReq'
+import { useQuery } from '@tanstack/react-query'
+import Loader from '../../common/Loader'
+import ErrorMsg from '../../common/ErrorMsg'
 
 const data = [
   { name: 'Digital Marketing', img: '/e1.png' },
@@ -17,6 +21,10 @@ const data = [
 ]
 
 const Categories = () => {
+  const { data: categories, isLoading, isError } = useQuery({
+    queryKey: ['category'],
+    queryFn: () => axiosReq.get('/category/all'),
+  })
   return (
     <Box sx={{
       position: 'relative',
@@ -49,30 +57,32 @@ const Categories = () => {
         </SlideAnimation>
         <Stack direction='row' gap={3} mt={7} justifyContent='center' flexWrap='wrap'>
           {
-            data.map((item, i) => (
-              <FadeAnimation key={i} delay={100 * i}>
+            categories?.data?.length === 0 ? <Typography sx={{ textAlign: 'center', mt: 2 }}>No category found</Typography> :
+              isLoading ? <Loader /> : isError ? <ErrorMsg /> :
+                categories?.data?.map((item, i) => (
+                  <FadeAnimation key={i} delay={100 * i}>
 
-                <Stack sx={{
-                  bgcolor: '#fff',
-                  p: { xs: 1, md: 1.3 },
-                  cursor: 'pointer',
-                  borderRadius: '50px',
-                  transition: '.5s',
-                  ":hover": {
-                    bgcolor: 'primary.main',
-                    color: '#fff'
-                  }
-                }} direction='row' alignItems='center' gap={{ xs: .5, md: 2 }}>
-                  <Box sx={{
-                    width: { xs: '35px', md: '45px' },
-                    height: { xs: '35px', md: '45px' }
-                  }}>
-                    <img style={{ width: '100%', borderRadius: '100px', border: '4px solid #ecedff' }} src={item.img} alt="" />
-                  </Box>
-                  <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, lineHeight: '10px' }}>{item.name}</Typography>
-                </Stack>
-              </FadeAnimation>
-            ))
+                    <Stack sx={{
+                      bgcolor: '#fff',
+                      p: { xs: 1, md: 1.3 },
+                      cursor: 'pointer',
+                      borderRadius: '50px',
+                      transition: '.5s',
+                      ":hover": {
+                        bgcolor: 'primary.main',
+                        color: '#fff'
+                      }
+                    }} direction='row' alignItems='center' gap={{ xs: .5, md: 2 }}>
+                      <Box sx={{
+                        width: { xs: '35px', md: '45px' },
+                        height: { xs: '35px', md: '45px' }
+                      }}>
+                        <img style={{ width: '100%', borderRadius: '100px', border: '4px solid #ecedff' }} src={item.img} alt="" />
+                      </Box>
+                      <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, mr: 1, lineHeight: '10px' }}>{item.name}</Typography>
+                    </Stack>
+                  </FadeAnimation>
+                ))
           }
         </Stack>
       </Container>

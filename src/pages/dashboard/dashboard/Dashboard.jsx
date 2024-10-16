@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import { axiosReq } from '../../../utils/axiosReq'
 import Loader from '../../../common/Loader'
 import ErrorMsg from '../../../common/ErrorMsg'
+import CButton from '../../../common/CButton'
+import { Link } from 'react-router-dom'
 
 const cardStyle = {
   box: {
@@ -31,10 +33,19 @@ const cardStyle = {
 const Dashboard = () => {
   const { user } = useUser()
   const { token } = useAuth()
-  const { data: courses, isLoading, isError } = useQuery({
-    queryKey: ['recentCourse'],
+
+  const { data: instructorCourses, isLoading: instructorCoursesLoading, isError: instructorCoursesError } = useQuery({
+    queryKey: ['recentInstructorCourse'],
     queryFn: () => axiosReq.get('/course/instructor/recent', { headers: { Authorization: token } })
   })
+  const { data: studentCourses, isLoading: studentCoursesLoading, isError: studentCoursesError } = useQuery({
+    queryKey: ['recentStudentCourse'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/course/student/recent', { headers: { Authorization: token } })
+      return res?.data.filter(course => course.status === 'active')
+    }
+  })
+
   return (
     <Box sx={{
       bgcolor: '#fff',
@@ -81,12 +92,36 @@ const Dashboard = () => {
       </Typography>
       <Stack direction={{ xs: 'column', md: 'row' }} gap={4} flexWrap='wrap'>
         {
-          isLoading ? <Loader /> : isError ? <ErrorMsg /> :
-            courses?.data?.map((item, id) => (
-              <Box key={id} mt={2}>
-                <CourseCardSmall data={item} />
-              </Box>
-            ))
+          user?.role === 'instructor' &&
+            instructorCourses?.data?.length === 0 ?
+            <Box>
+              <Typography sx={{ textAlign: 'center', mt: 2, p: 5 }}>No course found</Typography>
+              <Link to='/my-course'>
+                <CButton variant='contained'>Create Course</CButton>
+              </Link>
+            </Box>
+            :
+            instructorCoursesLoading ? <Loader /> : instructorCoursesError ? <ErrorMsg /> :
+              instructorCourses?.data?.map((item, id) => (
+                <Box key={id} mt={2}>
+                  <CourseCardSmall data={item} />
+                </Box>
+              ))
+        }
+        {
+          user?.role === 'student' &&
+            studentCourses?.length === 0 ? <Box>
+            <Typography sx={{ textAlign: 'center', mt: 2, p: 5 }}>No course found</Typography>
+            <Link to='/dashboard/all-course'>
+              <CButton variant='contained'>Explore Course</CButton>
+            </Link>
+          </Box> :
+            studentCoursesLoading ? <Loader /> : studentCoursesError ? <ErrorMsg /> :
+              studentCourses?.map((item, id) => (
+                <Box key={id} mt={2}>
+                  <CourseCardSmall data={item} />
+                </Box>
+              ))
         }
       </Stack>
 

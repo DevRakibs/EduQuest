@@ -1,5 +1,7 @@
-import Home from './pages/home/Home'
+/* eslint-disable react/prop-types */
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import Home from './pages/home/Home'
 import NotFound from './pages/notFound/Index'
 import Resourse from './pages/resourse/Resourse'
 import Course from './pages/course/Course'
@@ -8,7 +10,6 @@ import Footer from './components/home/Footer'
 import CourseDetails from './pages/course/CourseDetails'
 import Blog from './pages/blog/Blog'
 import BlogDetails from './pages/blog/BlogDetails'
-import { useEffect } from 'react'
 import Contact from './pages/contact/Contact'
 import Dashboard from './pages/dashboard/dashboard/Dashboard'
 import Layout from './pages/dashboard/Layout'
@@ -28,15 +29,40 @@ import PasswordReset from './pages/password-reset/PasswordReset'
 import Profile from './pages/dashboard/profile/Profile'
 import InstructorLogin from './pages/signin/InstructorLogin'
 import MyCourseDetails from './pages/dashboard/myCourse/MyCourseDetails'
+import Loader from './common/Loader'
 
-const HomeLayout = () => {
+const HomeLayout = () => (
+  <>
+    <Navbar />
+    <ContactTop />
+    <Outlet />
+    <Footer />
+  </>
+)
+
+const ConditionalRoute = ({ user, isLoading }) => {
+  if (isLoading) return <Loader />
+
+  const instructor = user?.role === 'instructor'
+  const student = user?.role === 'student'
+
   return (
-    <>
-      <Navbar />
-      <ContactTop />
-      <Outlet />
-      <Footer />
-    </>
+    <Routes>
+      {instructor && (
+        <>
+          <Route path='my-course' element={<MyCourse />} />
+          <Route path='my-course/:id' element={<MyCourseDetails />} />
+        </>
+      )}
+      {student && (
+        <>
+          <Route path='all-course' element={<AllCourse />} />
+          <Route path='enrolled' element={<EnrolledCourse />} />
+          <Route path='enrolled/:id' element={<LearnCourse />} />
+        </>
+      )}
+      {/* <Route path='*' element={<NotFound />} /> */}
+    </Routes>
   )
 }
 
@@ -49,12 +75,8 @@ const ScrollToTop = () => {
 }
 
 function App() {
-  const { user } = useUser()
+  const { user, isLoading } = useUser()
   const { token } = useAuth()
-
-  const instructor = user?.role === 'instructor'
-  const student = user?.role === 'student'
-
 
   return (
     <>
@@ -66,7 +88,7 @@ function App() {
         <Route path='forgot-password' element={<ForgotePass />} />
         <Route path='password-reset/:token' element={<PasswordReset />} />
         <Route path='/' element={<HomeLayout />} >
-          <Route index path='/' element={<Home />} />
+          <Route index element={<Home />} />
           <Route path='course' element={<Course />} />
           <Route path='course/:id' element={<CourseDetails />} />
           <Route path='resource' element={<Resourse />} />
@@ -77,24 +99,9 @@ function App() {
         </Route>
         <Route path='/dashboard' element={token ? <Layout /> : <Navigate to="/signin" />}>
           <Route index element={<Dashboard />} />
-          {
-            instructor &&
-            <>
-              <Route path='my-course' element={<MyCourse />} />
-              <Route path='my-course/:id' element={<MyCourseDetails />} />
-            </>
-          }
+          <Route path='*' element={<ConditionalRoute user={user} isLoading={isLoading} />} />
           <Route path='profile' element={<Profile />} />
-          {
-            student &&
-            <>
-              <Route path='all-course' element={<AllCourse />} />
-              <Route path='enrolled' element={<EnrolledCourse />} />
-              <Route path='enrolled/:id' element={<LearnCourse />} />
-            </>
-          }
           <Route path='settings' element={<Setting />} />
-          <Route path='*' element={<NotFound />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

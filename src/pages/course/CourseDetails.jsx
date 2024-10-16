@@ -3,48 +3,54 @@ import { Box, Chip, Container, Grid, ListItem, Paper, Stack, Typography } from '
 import Breadcrumbs from '../../common/BreadCrumb'
 import CButton from '../../common/CButton'
 import { AccessTime, AddBoxSharp, ArrowRight, CalendarMonth, DoneAll, DoubleArrow, FormatListBulleted, ImportContacts, KeyboardArrowRight, KeyboardDoubleArrowRight, List, PlayCircleFilledOutlined, PlayCircleFilledWhite, PlayCircleOutline, PodcastsOutlined } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInMonths, differenceInSeconds, format, parse } from 'date-fns'
-
-const courseInfo = [
-  {
-    title: 'ব্যাচ শুরু',
-    desc: 'বৃহস্পতিবার ২৬ সেপ্টেম্বর'
-  },
-  {
-    title: 'লাইভ ক্লাস',
-    desc: 'রাত ১০:১৫- ১১:৪৫ (বৃহ,শনি)'
-  },
-  {
-    title: 'সিট বাকি',
-    desc: '২৮৬ টি'
-  },
-  {
-    title: 'ভর্তি চলছে',
-    desc: '১ম ব্যাচে'
-  },
-]
+import { useQuery } from '@tanstack/react-query'
+import { axiosReq } from '../../utils/axiosReq'
+import Loader from '../../common/Loader'
+import ErrorMsg from '../../common/ErrorMsg'
 
 
 const CourseDetails = () => {
-  const targetDate = '2024.11.25'
   const [timeRemaining, setTimeRemaining] = useState({
     months: 0,
     days: 0,
     hours: 0,
   });
 
+  const { id } = useParams()
+  const { data: course, isLoading, isError } = useQuery({
+    queryKey: ['course', id],
+    queryFn: async () => {
+      const res = await axiosReq.get(`/course/${id}`)
+      return res.data
+    }
+  })
+
+  const targetDate = course?.startDate
+    ? (new Date(course.startDate) > new Date()
+      ? format(new Date(course.startDate), 'yyyy.MM.dd')
+      : format(new Date(), 'yyyy.MM.dd')) // Use current date if start date has passed
+    : format(new Date(), 'yyyy.MM.dd'); // Use current date if no start date
+
+
+
   useEffect(() => {
     const calculateTimeRemaining = () => {
       const currentDate = new Date();
       const target = parse(targetDate, 'yyyy.MM.dd', new Date());
 
-      const months = differenceInMonths(target, currentDate);
-      const days = differenceInDays(target, currentDate) % 30; // Approximation for days within a month
-      const hours = differenceInHours(target, currentDate) % 24;
+      if (target <= currentDate) {
+        // Course has already started
+        setTimeRemaining({ months: 0, days: 0, hours: 0 });
+      } else {
+        const months = differenceInMonths(target, currentDate);
+        const days = differenceInDays(target, currentDate) % 30; // Approximation for days within a month
+        const hours = differenceInHours(target, currentDate) % 24;
 
-      setTimeRemaining({ months, days, hours });
+        setTimeRemaining({ months, days, hours });
+      }
     };
 
     calculateTimeRemaining();
@@ -52,6 +58,9 @@ const CourseDetails = () => {
     const interval = setInterval(calculateTimeRemaining, 1000 * 60 * 60); // Update every hour
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, [targetDate]);
+
+  if (isLoading) return <Loader />
+  if (isError) return <ErrorMsg />
 
   return (
     <Box mb={10}>
@@ -70,7 +79,7 @@ const CourseDetails = () => {
 
         <Stack direction={{ xs: 'column', lg: 'row' }} gap={5} justifyContent='space-between' mt={{ xs: 10, lg: 10 }}>
           <Stack sx={{ flex: 1 }}>
-            <Typography variant='h4' mb={1}>The Complete Web Developer Course 2.0</Typography>
+            <Typography variant='h4' mb={1}>{course?.title}</Typography>
             <Typography variant="body" sx={{
               fontSize: '14px',
               px: 2, py: .5, mb: 1,
@@ -78,10 +87,10 @@ const CourseDetails = () => {
               bgcolor: 'bg',
               // color: '#fff',
               borderRadius: '50px',
-            }}>Web Development</Typography>
+            }}>{course?.category?.name}</Typography>
             <Stack direction='row' flexWrap='wrap' gap={3} mt={2}>
               {
-                courseInfo.map((item, id) => (
+                course?.batchInfo?.map((item, id) => (
                   <Box key={id} sx={{
                     p: 2,
                     minWidth: { xs: '100%', sm: '200px' }, flex: 1,
@@ -89,7 +98,7 @@ const CourseDetails = () => {
                     border: '1px solid green'
                   }} >
                     <Typography sx={{ fontSize: '16px', fontWeight: 600, color: 'green' }}>{item.title}</Typography>
-                    <Typography variant='body' sx={{ fontSize: '16px' }}>{item.desc}</Typography>
+                    <Typography variant='body' sx={{ fontSize: '16px' }}>{item.description}</Typography>
                   </Box>
                 ))
               }
@@ -100,26 +109,7 @@ const CourseDetails = () => {
               p: 2,
             }} gap={2} mt={3}>
               <Typography variant='h5'>Overview</Typography>
-              <Typography sx={{ fontWeight: 600 }} >Course Description</Typography>
-              <Typography variant='body'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</Typography>
-              <Typography>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</Typography>
-              <Box>
-                <Typography sx={{ fontWeight: 600 }} >What you'll learn</Typography>
-                <ul>
-                  <li>Become a UX designer.</li>
-                  <li>You will be able to add UX designer to your CV.</li>
-                  <li>Build & test a full website design.</li>
-                  <li>Build & test a full mobile app.</li>
-                  <li>Learn to design websites & mobile phone apps.</li>
-                  <li>You'll learn how to choose colors.</li>
-                  <li>Prototype your designs with interactions.</li>
-                  <li>Export production ready assets.</li>
-                </ul>
-              </Box>
-              <Typography sx={{ fontWeight: 600 }} >Requirements</Typography>
-              <Typography>You will need a copy of Adobe XD 2019 or above. A free trial can be downloaded from Adobe.
-                No previous design experience is needed.
-                No previous Adobe XD skills are needed.</Typography>
+              <div dangerouslySetInnerHTML={{ __html: course?.description }} />
             </Stack>
 
 
@@ -184,40 +174,35 @@ const CourseDetails = () => {
                 // borderRadius: '16px',
                 overflow: 'hidden'
               }}>
-                <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/course-01.jpg" alt="" />
+                <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={course?.cover ?? ''} alt="" />
               </Box>
               <Stack sx={{ p: '0 20px 20px' }}>
-                <Typography sx={{ fontWeight: 600, fontSize: '20px', color: 'green', my: 1 }}>$100</Typography>
-                <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', mb: 1.5 }}>The Complete Web Developer Course 2.0</Typography>
+                <Typography sx={{ fontWeight: 600, fontSize: '20px', color: 'green', my: 1 }}>Price: {course?.price}৳</Typography>
+                <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', mb: 1.5 }}>{course?.title}</Typography>
 
                 <CButton rounded contained>Enrole Now</CButton>
+
+                {
+                  course?.startDate && <Typography variant='h6' mt={3}>Start Date: <span style={{ color: 'green' }}>{format(course?.startDate, ' dd MMM yyyy')}</span></Typography>
+                }
+                {
+                  course?.endDate && <Typography variant='h6'>End Date: <span style={{ color: 'red' }}>{format(course?.endDate, ' dd MMM yyyy')}</span></Typography>
+                }
                 <Typography variant='h6' mt={3}>Includes</Typography>
-                <ListItem>
-                  <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
-                  <Typography variant='body'> 11 hours on-demand video</Typography>
-                </ListItem>
-                <ListItem>
-                  <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
-                  <Typography variant='body'> 69 downloadable resources</Typography>
-                </ListItem>
-                <ListItem>
-                  <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
-                  <Typography variant='body'> Full lifetime access</Typography>
-                </ListItem>
-                <ListItem>
-                  <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
-                  <Typography variant='body'> Certificate of Completion</Typography>
-                </ListItem>
-                <ListItem>
-                  <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
-                  <Typography variant='body'> Certificate of Completion</Typography>
-                </ListItem>
+                {
+                  course?.includes?.map((item, id) => (
+                    <ListItem key={id}>
+                      <DoneAll sx={{ color: 'secondary.main', mr: 1 }} />
+                      <Typography variant='body'>{item}</Typography>
+                    </ListItem>
+                  ))
+                }
               </Stack>
             </Stack>
           </Box>
-        </Stack>
+        </Stack >
 
-      </Container>
+      </Container >
     </Box >
 
   )

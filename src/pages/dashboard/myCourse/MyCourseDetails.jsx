@@ -11,12 +11,16 @@ import CDialog from '../../../common/CDialog'
 import Loader from '../../../common/Loader'
 import ErrorMsg from '../../../common/ErrorMsg'
 import ContentDetails from './ContentDetails'
+import useAuth from '../../../hook/useAuth'
+import EnrolledStudent from './EnrolledStudent'
 
 const MyCourseDetails = () => {
   const [value, setValue] = useState(0);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleDialog = () => setEditDialogOpen(false)
+
+  const { token } = useAuth()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -26,11 +30,19 @@ const MyCourseDetails = () => {
     queryKey: ['course', id],
     queryFn: () => axiosReq.get(`/course/${id}`)
   })
+  console.log(course)
+  const { data: contentData, } = useQuery({
+    queryKey: ['content', course?.data?._id],
+    queryFn: async () => {
+      const response = await axiosReq.get(`/course/content/${id}`, { headers: { Authorization: token } });
+      return response.data;
+    },
+  });
 
   if (isLoading) return <Loader />
   if (isError) return <ErrorMsg />
   return (
-    <Box maxWidth='md' sx={{
+    <Box maxWidth='lg' sx={{
       bgcolor: '#fff',
       p: 4,
       minHeight: '100vh'
@@ -69,7 +81,7 @@ const MyCourseDetails = () => {
               ))}
             </Stack>
 
-            <Chip label={`Status: ${course?.data.status}`} color="warning" variant="outlined" sx={{ mt: 1 }} />
+            <Chip sx={{ mt: 2, px: 3 }} label={course?.data.status} color={course?.data.status === 'active' ? 'success' : course?.data.status === 'pending' ? 'warning' : 'default'} />
           </CardContent>
         </Grid>
       </Grid>
@@ -78,39 +90,48 @@ const MyCourseDetails = () => {
 
       <Tabs value={value} onChange={handleChange}>
         <Tab label="Course Info" />
-        <Tab label="Course Content" />
+        <Tab label={`Course Content (${contentData?.sections?.length || 0})`} />
+        <Tab label={`Enrolled Student (${course?.data.studentsEnrolled.length})`} />
       </Tabs>
 
       {/* Course Description */}
       <CTabPanel value={value} index={0}>
         <Box>
-          <Stack direction='row' justifyContent='space-between'>
+          <Stack mb={2} direction='row' justifyContent='space-between'>
             <Box />
             <CButton onClick={() => setEditDialogOpen(true)} contained>Update</CButton>
           </Stack>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Course Info
-          </Typography>
-          <div dangerouslySetInnerHTML={{ __html: course?.data.description }} />
 
-          {/* What You'll Learn */}
-          <Box sx={{ mt: 3, width: 'fit-content', border: '1px solid #e0e0e0', borderRadius: '8px', px: 4, py: 2 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Includes in Course
-            </Typography>
-            <List>
-              {course?.data.includes.map((item, index) => (
-                <ListItem key={index} disableGutters>
-                  <ListItemText primary={item} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
+          <Stack direction={{ xs: 'column', md: 'row' }} gap={2}>
+            <Box flex={2}>
+              <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Course Info
+              </Typography>
+              <div dangerouslySetInnerHTML={{ __html: course?.data.description }} />
+            </Box>
+
+            <Box flex={1} mt={{ xs: 0, md: 6 }} sx={{ p: 3, height: '100%', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Includes in Course
+              </Typography>
+              <List>
+                {course?.data.includes.map((item, index) => (
+                  <ListItem key={index} disableGutters>
+                    <ListItemText primary={item} />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Stack>
         </Box>
       </CTabPanel>
 
       <CTabPanel value={value} index={1}>
         <ContentDetails course={course?.data} />
+      </CTabPanel>
+
+      <CTabPanel value={value} index={2}>
+        <EnrolledStudent course={course?.data} />
       </CTabPanel>
 
       <CDialog maxWidth='md' title='Update Course Info' open={editDialogOpen} onClose={handleDialog}>
