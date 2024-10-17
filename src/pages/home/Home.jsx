@@ -1,5 +1,4 @@
 import Hero from '../../components/home/Hero'
-import CategorySlide from '../../components/home/CategorySlide'
 import Journey from '../../components/home/Journey'
 import Categories from '../../components/home/Categories'
 import FeaturedCourses from '../../components/home/FeaturedCourses'
@@ -12,7 +11,6 @@ const Home = () => {
   return (
     <>
       <Hero />
-      {/* <CategorySlide /> */}
       <Journey />
       <Categories />
       <FeaturedCourses />

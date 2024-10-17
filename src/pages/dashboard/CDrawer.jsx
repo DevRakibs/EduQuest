@@ -24,7 +24,6 @@ const CDrawer = ({ drawerClose }) => {
       isInstructor ? [
         { name: 'My Course', icon: <LibraryAddOutlined fontSize='small' />, path: 'my-course' },
       ] : [
-        { name: 'All Course', icon: <Assignment fontSize='small' />, path: 'all-course' },
         { name: 'Enrolled Course', icon: <SchoolOutlined fontSize='small' />, path: 'enrolled' },
       ]
     ) : []),

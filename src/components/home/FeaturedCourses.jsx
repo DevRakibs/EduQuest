@@ -58,6 +58,7 @@ const FeaturedCourses = (props) => {
       return res?.data.filter(course => course.status === 'active')
     }
   })
+  if (!courses) return null
   return (
     <Box sx={{
       position: 'relative',

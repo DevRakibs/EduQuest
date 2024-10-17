@@ -87,7 +87,9 @@ const CourseCardSmall = ({ data }) => {
               borderRadius: '8px',
             }}>{data?.category?.name}
             </Typography>
-            <Typography sx={{ fontSize: '16px', my: 1, lineHeight: '20px', fontWeight: '600' }}>{data?.title}</Typography>
+            <Link to={`/course/${data?._id}`}>
+              <Typography sx={{ fontSize: '16px', my: 1, lineHeight: '20px', fontWeight: '600' }}>{data?.title}</Typography>
+            </Link>
           </Box>
           {user && (
             user?.role === 'student' ?

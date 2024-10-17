@@ -3,29 +3,21 @@ import { Box, Button, Container, ListItem, Stack, Typography } from '@mui/materi
 import React from 'react'
 import { SlideAnimation } from '../../common/Animation'
 import BlogCard from '../BlogCard'
-
-const data = [
-  {
-    title: 'The Importance Of Intrinsic Motivation for Students',
-    category: 'Web Development',
-    date: 'Jun 17, 2024',
-    img: '/blog1.jpg'
-  },
-  {
-    title: 'The Importance Of Intrinsic Motivation for Students',
-    category: 'Software Testing',
-    date: 'Aug 21, 2024',
-    img: '/blog2.jpg'
-  },
-  {
-    title: 'Professional Mobile Painting and Sculpting',
-    category: 'Education',
-    date: 'Aug 22, 2024',
-    img: '/blog3.jpg'
-  },
-]
+import { axiosReq } from '../../utils/axiosReq'
+import Loader from '../../common/Loader'
+import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 
 const Blog = () => {
+  const { data: blogs, isLoading } = useQuery({
+    queryKey: ['blog'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/blog/all')
+      return res.data
+    }
+  })
+
+  if (!blogs) return null
   return (
     <Box sx={{
       position: 'relative',
@@ -55,16 +47,19 @@ const Blog = () => {
         </Stack>
         <Stack direction={{ xs: 'column', md: 'row' }} justifyContent='center' mt={6} gap={3} flexWrap='wrap'>
           {
-            data.map((item, i) => (
-              <SlideAnimation key={i} direction='up' delay={100 * i}>
-                <BlogCard item={item} />
-              </SlideAnimation>
-            ))
+            isLoading ? <Loader /> :
+              blogs?.map((item, i) => (
+                <SlideAnimation key={i} direction='up' delay={100 * i}>
+                  <BlogCard item={item} />
+                </SlideAnimation>
+              ))
           }
         </Stack>
         <Stack direction='row' justifyContent='center' mt={4}>
           <SlideAnimation direction='up' delay={400}>
-            <Button sx={{ borderRadius: '50px' }} endIcon={<ArrowOutwardOutlined />} variant='outlined'>All Blogs</Button>
+            <Link to='/blog'>
+              <Button sx={{ borderRadius: '50px' }} endIcon={<ArrowOutwardOutlined />} variant='outlined'>All Blogs</Button>
+            </Link>
           </SlideAnimation>
         </Stack>
       </Container>

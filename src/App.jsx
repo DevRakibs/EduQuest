@@ -17,7 +17,6 @@ import ContactTop from './components/ContactTop'
 import StudentLogin from './pages/signin/StudentLogin'
 import SignUp from './pages/signup/Signup'
 import Setting from './pages/dashboard/settings/Setting'
-import AllCourse from './pages/dashboard/allCourse/AllCourse'
 import VerifyEmail from './verifyEmail/VerifyEmail'
 import useAuth from './hook/useAuth'
 import useUser from './hook/useUser'
@@ -56,7 +55,6 @@ const ConditionalRoute = ({ user, isLoading }) => {
       )}
       {student && (
         <>
-          <Route path='all-course' element={<AllCourse />} />
           <Route path='enrolled' element={<EnrolledCourse />} />
           <Route path='enrolled/:id' element={<LearnCourse />} />
         </>

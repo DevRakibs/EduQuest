@@ -25,6 +25,7 @@ const Categories = () => {
     queryKey: ['category'],
     queryFn: () => axiosReq.get('/category/all'),
   })
+  if (!categories) return null
   return (
     <Box sx={{
       position: 'relative',
