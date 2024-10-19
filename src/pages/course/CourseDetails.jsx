@@ -88,6 +88,7 @@ const CourseDetails = () => {
               // color: '#fff',
               borderRadius: '50px',
             }}>{course?.category?.name}</Typography>
+
             <Stack direction='row' flexWrap='wrap' gap={3} mt={2}>
               {
                 course?.batchInfo?.map((item, id) => (
@@ -180,7 +181,31 @@ const CourseDetails = () => {
                 <Typography sx={{ fontWeight: 600, fontSize: '20px', color: 'green', my: 1 }}>Price: {course?.price}৳</Typography>
                 <Typography sx={{ fontSize: '20px', lineHeight: '25px', fontWeight: '600', mb: 1.5 }}>{course?.title}</Typography>
 
-                <CButton rounded contained>Enrole Now</CButton>
+                <ListItem>
+                  <Typography mr={2}>Status: </Typography>
+                  <Typography
+                    sx={{
+                      bgcolor: {
+                        pending: 'orange',
+                        upcoming: 'purple',
+                        running: 'steelblue',
+                        completed: 'green',
+                        inactive: 'darkgray'
+                      }[course?.status],
+                      color: 'white',
+                      width: '120px',
+                      textAlign: 'center',
+                      borderRadius: '50px',
+                      fontWeight: 'medium',
+                      px: 1,
+                      py: 0.5,
+                    }}
+                  >
+                    {course?.status}
+                  </Typography>
+                </ListItem>
+
+                {/* <CButton rounded contained>Enrole Now</CButton> */}
 
                 {
                   course?.startDate && <Typography variant='h6' mt={3}>Start Date: <span style={{ color: 'green' }}>{format(course?.startDate, ' dd MMM yyyy')}</span></Typography>

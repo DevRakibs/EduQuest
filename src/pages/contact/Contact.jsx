@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import BreadCrumb from '../../common/BreadCrumb'
 import { LocationOnOutlined, MailOutlined, SettingsPhoneOutlined } from '@mui/icons-material'
 import CButton from '../../common/CButton'
+import { axiosReq } from '../../utils/axiosReq'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 const Contact = () => {
 
@@ -18,6 +21,17 @@ const Contact = () => {
     message: false
   });
 
+
+  const mutation = useMutation({
+    mutationFn: (input) => axiosReq.post('/contact/create', input),
+    onSuccess: (res) => {
+      toast.success(res.data);
+      setFormData({ name: '', email: '', message: '' });
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    }
+  });
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -36,10 +50,7 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Process form submission (e.g., send data to an API or server)
-      alert('Form submitted successfully!');
-      // Clear the form
-      setFormData({ name: '', email: '', message: '' });
+      mutation.mutate(formData);
     }
   };
   return (
@@ -136,8 +147,8 @@ const Contact = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                  Submit
+                <Button disabled={mutation.isPending} type="submit" variant="contained" color="primary" fullWidth>
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
                 </Button>
               </Grid>
             </Grid>

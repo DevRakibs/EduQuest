@@ -27,7 +27,6 @@ const LearnCourse = () => {
     queryKey: ['content', id],
     queryFn: async () => {
       const response = await axiosReq.get(`/course/content/${id}`, { headers: { Authorization: token } });
-      console.log(response)
       return response.data.status === 'published' ? response.data : null;
     },
   });
@@ -50,38 +49,51 @@ const LearnCourse = () => {
       minHeight: '100vh'
     }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={5}>
+        {/* <Grid item xs={12} sm={5}>
           <img
-            src={course?.data.cover}
-            alt={course?.data.title}
-            style={{ width: '100%', borderRadius: '8px' }}
+            src={course?.data?.cover}
+            alt={course?.data?.title}
+            style={{ width: '100%', borderRadius: '8px', height: '250px', objectFit: 'cover' }}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} sm={7}>
           <CardContent>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>
-              {course?.data.title}
+              {course?.data?.title}
             </Typography>
             <Typography sx={{ border: '1px solid lightgray', width: 'fit-content', px: 1, borderRadius: '8px', mb: 2 }}>
-              {course?.data.category?.name}
+              {course?.data?.category?.name}
             </Typography>
 
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Start Date: {course?.data.startDate && format(new Date(course?.data.startDate), 'yyyy-MM-dd')} <br />
-              End Date: {course?.data.endDate && format(new Date(course?.data.endDate), 'yyyy-MM-dd')}
-            </Typography>
-            <Stack direction={{ xs: 'column', md: 'row' }} gap={2}>
-              {course?.data.batchInfo.map((batch, index) => (
-                <Box key={index}>
-                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                    {batch.title}:
-                  </Typography>
-                  <Typography variant="body1">{batch.description}</Typography>
-                </Box>
-              ))}
-            </Stack>
+            {/* <Typography variant="body1" sx={{ mb: 2 }}>
+              Start Date: {course?.data?.startDate && format(new Date(course?.data?.startDate), 'yyyy-MM-dd')} <br />
+              End Date: {course?.data?.endDate && format(new Date(course?.data?.endDate), 'yyyy-MM-dd')}
+            </Typography> */}
 
+            <ListItem>
+              <Typography mr={2}>Status: </Typography>
+              <Typography
+                sx={{
+                  bgcolor: {
+                    pending: 'orange',
+                    upcoming: 'purple',
+                    running: 'steelblue',
+                    completed: 'green',
+                    inactive: 'darkgray'
+                  }[course?.data?.status],
+                  color: 'white',
+                  width: '120px',
+                  textAlign: 'center',
+                  borderRadius: '50px',
+                  fontWeight: 'medium',
+                  px: 1,
+                  py: 0.5,
+                }}
+              >
+                {course?.data?.status}
+              </Typography>
+            </ListItem>
           </CardContent>
         </Grid>
       </Grid>
@@ -114,27 +126,27 @@ const LearnCourse = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                    <b>{item.order}. </b> {item.title}
+                    <b>{item?.order}. </b> {item?.title}
                   </Typography>
                   <Typography variant="body2" sx={{ ml: 2, fontWeight: 300, display: 'flex', gap: 1, alignItems: 'center' }}>
-                    <AccessTime fontSize='small' /> {item.duration} mins
+                    <AccessTime fontSize='small' /> {item?.duration} mins
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography variant="body2" sx={{ mb: 1, border: '1px solid lightgray', px: 1, borderRadius: 2, width: 'fit-content' }}>
-                    Type: {item.type}
+                    Type: {item?.type}
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    {item.description}
+                    {item?.description}
                   </Typography>
 
-                  {item.type === 'video' ? (
+                  {item?.type === 'video' ? (
                     <Box>
                       <Button
                         size='small'
                         variant="contained"
                         startIcon={<PlayArrow />}
-                        onClick={() => setSelectedVideo(item.url)}
+                        onClick={() => setSelectedVideo(item?.url)}
                       >
                         Play
                       </Button>
@@ -143,7 +155,7 @@ const LearnCourse = () => {
                           <iframe
                             width="100%"
                             height="412"
-                            src={`${item.url.replace('watch?v=', 'embed/')}?modestbranding=1&rel=0&controls=1&disablekb=1&`}
+                            src={`https://www.youtube.com/embed/${item?.url.split('v=')[1].split('&')[0]}?modestbranding=1&rel=0&controls=1&disablekb=1`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen

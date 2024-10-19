@@ -5,6 +5,7 @@ import { axiosReq } from '../../utils/axiosReq'
 import { useQuery } from '@tanstack/react-query'
 import Loader from '../../common/Loader'
 import ErrorMsg from '../../common/ErrorMsg'
+import { Link } from 'react-router-dom'
 
 const data = [
   { name: 'Digital Marketing', img: '/e1.png' },
@@ -62,26 +63,27 @@ const Categories = () => {
               isLoading ? <Loader /> : isError ? <ErrorMsg /> :
                 categories?.data?.map((item, i) => (
                   <FadeAnimation key={i} delay={100 * i}>
-
-                    <Stack sx={{
-                      bgcolor: '#fff',
-                      p: { xs: 1, md: 1.3 },
-                      cursor: 'pointer',
-                      borderRadius: '50px',
-                      transition: '.5s',
-                      ":hover": {
-                        bgcolor: 'primary.main',
-                        color: '#fff'
-                      }
-                    }} direction='row' alignItems='center' gap={{ xs: .5, md: 2 }}>
-                      <Box sx={{
-                        width: { xs: '35px', md: '45px' },
-                        height: { xs: '35px', md: '45px' }
-                      }}>
-                        <img style={{ width: '100%', borderRadius: '100px', border: '4px solid #ecedff' }} src={item.img} alt="" />
-                      </Box>
-                      <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, mr: 1, lineHeight: '10px' }}>{item.name}</Typography>
-                    </Stack>
+                    <Link className='link' to={'/course'}>
+                      <Stack sx={{
+                        bgcolor: '#fff',
+                        p: { xs: 1, md: 1.3 },
+                        cursor: 'pointer',
+                        borderRadius: '50px',
+                        transition: '.5s',
+                        ":hover": {
+                          bgcolor: 'primary.main',
+                          color: '#fff'
+                        }
+                      }} direction='row' alignItems='center' gap={{ xs: .5, md: 2 }}>
+                        <Box sx={{
+                          width: { xs: '35px', md: '45px' },
+                          height: { xs: '35px', md: '45px' }
+                        }}>
+                          <img style={{ width: '100%', borderRadius: '100px', border: '4px solid #ecedff' }} src={item.img} alt="" />
+                        </Box>
+                        <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, mr: 1, lineHeight: '10px' }}>{item.name}</Typography>
+                      </Stack>
+                    </Link>
                   </FadeAnimation>
                 ))
           }

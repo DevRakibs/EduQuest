@@ -4,6 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import useIsMobile from '../../hook/useIsMobile';
 import useAuth from '../../hook/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { axiosReq } from '../../utils/axiosReq';
 
 const navlinks = ['Home', 'Course', 'Resource', 'Blog', 'Contact']
 
@@ -14,13 +16,15 @@ const Navbar = () => {
 
   const { token } = useAuth()
 
-  const handleNavClose = () => setSideBarOpen(false);
+  const { data: info } = useQuery({
+    queryKey: ['info'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/info/get')
+      return res.data
+    }
+  })
 
-  // Derived state for active nav items
-  const isActive = useMemo(
-    () => (path) => pathname.startsWith(path),
-    [pathname]
-  );
+  const handleNavClose = () => setSideBarOpen(false);
 
   return (
     <Box sx={{ borderBottom: '1px solid lightgray' }}>
@@ -29,8 +33,7 @@ const Navbar = () => {
           <Stack direction='row' alignItems='center' justifyContent='space-between' py={2}>
             <Box sx={{ width: { xs: '150px', md: '200px' } }}>
               <Link className='link' to='/'>
-                <Typography sx={{ fontSize: '25px', fontWeight: 600 }}>EduQuest</Typography>
-                {/* <img style={{ width: '100%' }} src='/logo.svg' alt="Logo" /> */}
+                <img style={{ height: '50px', objectFit: 'contain' }} src={info?.logo ?? ''} alt="Logo" />
               </Link>
             </Box>
             <Box>
@@ -53,7 +56,17 @@ const Navbar = () => {
               </IconButton>
               <Box
                 sx={{
-                  bgcolor: isMobile ? 'secondary.main' : '',
+                  // bgcolor: isMobile ? 'secondary.main' : '',
+                  '::before': isMobile ? {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(to bottom, #FDF6F5, #E3F6E9)',
+                    zIndex: -1
+                  } : {},
                   position: isMobile ? 'fixed' : 'relative',
                   transform: isMobile ? (sideBarOpen ? 'translateX(0%)' : 'translateX(-100%)') : 'none',
                   top: 0,
@@ -78,8 +91,8 @@ const Navbar = () => {
                     to={label === 'Home' ? '/' : `/${label.toLowerCase()}`}
                     className='link'
                     style={({ isActive }) => ({
-                      borderBottom: isActive ? `3px solid ${isMobile ? '#fff' : '#392C7D'}` : '',
-                      color: isMobile ? '#fff' : 'black'
+                      borderBottom: isActive ? '3px solid #392C7D' : '',
+                      color: 'black'
                     })}
                     onClick={handleNavClose}
                   >

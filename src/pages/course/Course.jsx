@@ -28,7 +28,7 @@ const Course = () => {
           search: search
         }
       })
-      return res?.data.filter(course => course.status === 'active')
+      return res?.data.filter(course => course.status === 'running' || course.status === 'upcoming' || course.status === 'completed')
     }
   })
   return (
@@ -66,15 +66,15 @@ const Course = () => {
               ),
             }}
           />
-          <Box sx={{ minWidth: 300 }} >
+          <Box sx={{ minWidth: 200 }} >
             <FormControl fullWidth size='small'>
-              <InputLabel>Filter</InputLabel>
+              <InputLabel>category</InputLabel>
               <Select
                 value={category}
-                label="Filter"
+                label="category"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <MenuItem value={''}>None</MenuItem>
+                <MenuItem value={''}>All</MenuItem>
                 {
                   categories?.data?.map(c => (
                     <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>

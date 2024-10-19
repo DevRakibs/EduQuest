@@ -82,7 +82,7 @@ function App() {
       <Routes>
         <Route path='/signin' element={token ? <Navigate to="/dashboard" /> : <StudentLogin />} />
         <Route path='/instructor/login' element={token ? <Navigate to="/dashboard" /> : <InstructorLogin />} />
-        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signup' element={token ? <Navigate to="/dashboard" /> : <SignUp />} />
         <Route path='forgot-password' element={<ForgotePass />} />
         <Route path='password-reset/:token' element={<PasswordReset />} />
         <Route path='/' element={<HomeLayout />} >

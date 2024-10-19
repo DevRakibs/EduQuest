@@ -14,7 +14,7 @@ const EnrolledCourse = () => {
     queryKey: ['myEnrollment'],
     queryFn: async () => {
       const response = await axiosReq.get('course/enrolled/my', { headers: { Authorization: token } });
-      return response.data.filter(course => course.status === 'active')
+      return response.data.filter(course => course.status === 'running' || course.status === 'upcoming' || course.status === 'completed')
     }
   })
 

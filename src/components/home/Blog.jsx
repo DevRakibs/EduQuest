@@ -48,7 +48,7 @@ const Blog = () => {
         <Stack direction={{ xs: 'column', md: 'row' }} justifyContent='center' mt={6} gap={3} flexWrap='wrap'>
           {
             isLoading ? <Loader /> :
-              blogs?.map((item, i) => (
+              blogs?.slice(0, 3).map((item, i) => (
                 <SlideAnimation key={i} direction='up' delay={100 * i}>
                   <BlogCard item={item} />
                 </SlideAnimation>

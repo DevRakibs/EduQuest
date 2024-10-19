@@ -1,4 +1,4 @@
-import { Box, Button, Container, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Container, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import BreadCrumb from '../../common/BreadCrumb'
 import useIsMobile from '../../hook/useIsMobile'
@@ -7,64 +7,28 @@ import DataTable from '../../common/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { axiosReq } from '../../utils/axiosReq'
 
-const data = [
-  {
-    id: 1,
-    title: '907 – Responsive Multi-Purpose WordPress Theme',
-    category: 'Theme',
-    updateOn: 'January 20, 2022',
-    version: '5.1.5'
-  },
-  {
-    id: 2,
-    title: 'Add To Cart Redirect for WooCommerce',
-    category: 'Plugins',
-    updateOn: 'January 20, 2022',
-    version: '3.4.0'
-  },
-  {
-    id: 3,
-    title: 'AdForest – Classified Ads WordPress Theme',
-    category: 'Themes',
-    updateOn: 'January 20, 2022',
-    version: '2.0.2'
-  },
-  {
-    id: 4,
-    title: 'Avada | Website Builder For WordPress & WooCommerce',
-    category: 'Themes',
-    updateOn: 'January 20, 2022',
-    version: '2.0.2'
-  },
-  {
-    id: 5,
-    title: 'Avada | Website Builder For WordPress & WooCommerce',
-    category: 'Themes',
-    updateOn: 'January 20, 2022',
-    version: '2.0.2'
-  },
-  {
-    id: 6,
-    title: 'Avada | Website Builder For WordPress & WooCommerce',
-    category: 'Themes',
-    updateOn: 'January 20, 2022',
-    version: '2.0.2'
-  },
-]
-
 const Resourse = () => {
   const [search, setSearch] = useState('')
-  const isMobile = useIsMobile()
+  const [selectedCategory, setSelectedCategory] = useState('All')
 
   const { data: resourses, isLoading } = useQuery({
-    queryKey: ['resourse', search],
+    queryKey: ['resourse', search, selectedCategory],
     queryFn: async () => {
       const res = await axiosReq.get('/resourse/all', {
         params: {
-          search: search
+          search: search,
+          category: selectedCategory === 'All' ? '' : selectedCategory
         }
       })
       return res.data
+    }
+  })
+
+  const { data: category, } = useQuery({
+    queryKey: ['resourse/category'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/resourse/all')
+      return res.data.map(item => item.category)
     }
   })
 
@@ -124,14 +88,14 @@ const Resourse = () => {
         backgroundPosition: 'center',
         backgroundSize: 'cover'
       }}>
-        <Typography sx={{ fontSize: { xs: '20px', md: '30px' }, color: 'primary.main', fontWeight: 600, mb: 2 }}>Downloadable Resourse</Typography>
+        <Typography sx={{ fontSize: { xs: '20px', md: '30px' }, color: 'primary.main', fontWeight: 600, mb: 2 }}>Downloadable Resources</Typography>
         <BreadCrumb page='Resourse' />
       </Stack>
 
       <Container maxWidth='xl' sx={{ py: 4 }}>
         <Typography variant='h5' sx={{ textAlign: 'center' }}>Total Resources: {resourses?.length}</Typography>
 
-        <Box>
+        <Box display='flex' alignItems='center' gap={2} my={2}>
           <TextField
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -144,6 +108,19 @@ const Resourse = () => {
               ),
             }}
           />
+          <FormControl sx={{ width: 150 }} size='small' >
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={selectedCategory}
+              label="Category"
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <MenuItem value='All' onClick={() => setSelectedCategory('All')}>All</MenuItem>
+              {category?.map((item, index) => (
+                <MenuItem key={index} value={item}>{item}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
 
         <Box mt={4}>

@@ -3,18 +3,29 @@ import Navbar from './Navbar'
 import { FadeAnimation, SlideAnimation, ZoomAnimation } from '../../common/Animation'
 import { ArrowForward, Star } from '@mui/icons-material'
 import * as herojson from '../../json/herojson.json'
-import './Hero.css'
 import Lottie from 'react-lottie'
+import { Link } from 'react-router-dom'
+import { axiosReq } from '../../utils/axiosReq'
+import { useQuery } from '@tanstack/react-query'
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: herojson,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+};
 
 const Hero = () => {
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: herojson,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
+  const { data: info } = useQuery({
+    queryKey: ['info'],
+    queryFn: async () => {
+      const res = await axiosReq.get('/info/get')
+      return res.data
     }
-  };
+  })
+
   return (
     <Box maxWidth='xxl' sx={{
       position: 'relative',
@@ -48,7 +59,7 @@ const Hero = () => {
           }}>
             <Box sx={{ fontSize: '20px', color: 'primary.main', fontWeight: 600, mt: { xs: 5, md: 0 }, }}>
               <SlideAnimation direction='up'>
-                Welcome to EduQuest!
+                {info?.welcomeMessage}
               </SlideAnimation>
             </Box>
             <Box sx={{
@@ -70,17 +81,20 @@ const Hero = () => {
             <SlideAnimation direction='up' delay={500}>
 
               <Typography sx={{ color: 'primary.main', fontSize: { xs: '14px', md: '18px' }, mb: 1 }}>
-                We are experienced in educationl platform and skilled strategies
-                for the success of our online learning.
+                {info?.description}
               </Typography>
             </SlideAnimation>
 
             <Stack direction='row' gap={2}>
               <SlideAnimation direction='up' delay={600}>
-                <Button sx={{ height: { xs: '40px', md: '50px' }, borderRadius: '50px', whiteSpace: 'nowrap', width: { xs: '130px', md: '170px' } }} variant='contained' endIcon={<ArrowForward />} >Get Started</Button>
+                <Link to='/signin'>
+                  <Button sx={{ height: { xs: '40px', md: '50px' }, borderRadius: '50px', whiteSpace: 'nowrap', width: { xs: '130px', md: '170px' } }} variant='contained' endIcon={<ArrowForward />} >Get Started</Button>
+                </Link>
               </SlideAnimation>
               <SlideAnimation direction='up' delay={700}>
-                <Button sx={{ height: { xs: '40px', md: '50px' }, borderRadius: '50px', whiteSpace: 'nowrap', width: { xs: '150px', md: '170px' } }} variant='outlined' endIcon={<ArrowForward />} >Explore Course</Button>
+                <Link to='/course'>
+                  <Button sx={{ height: { xs: '40px', md: '50px' }, borderRadius: '50px', whiteSpace: 'nowrap', width: { xs: '150px', md: '170px' } }} variant='outlined' endIcon={<ArrowForward />} >Explore Course</Button>
+                </Link>
               </SlideAnimation>
             </Stack>
 

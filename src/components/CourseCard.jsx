@@ -1,4 +1,4 @@
-import { AccessTime, CalendarMonth, ImportContacts, KeyboardDoubleArrowRight, PlayCircleOutline, PodcastsOutlined } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, ImportContacts, KeyboardArrowRight, KeyboardDoubleArrowRight, PlayCircleOutline, PodcastsOutlined } from "@mui/icons-material";
 import { Box, Button, Chip, List, ListItem, Stack, Typography } from "@mui/material"
 import { Link } from "react-router-dom";
 import CButton from "../common/CButton";
@@ -61,10 +61,29 @@ const CourseCard = ({ data }) => {
           </ListItem>
         </Stack> */}
         <Stack direction='row' gap={2} justifyContent='space-between' mt={1}>
+          <Typography
+            sx={{
+              bgcolor: {
+                pending: 'orange',
+                upcoming: 'purple',
+                running: 'steelblue',
+                completed: 'green',
+                inactive: 'darkgray'
+              }[data?.status],
+              color: 'white',
+              width: '120px',
+              textAlign: 'center',
+              borderRadius: '50px',
+              fontWeight: 'medium',
+              px: 1,
+              py: 0.5,
+            }}
+          >
+            {data?.status}
+          </Typography>
           <Link to={`/course/${data?._id}`}>
-            <CButton contained rounded style={{ width: '150px' }}> বিস্তারিত</CButton>
+            <CButton endIcon={<KeyboardArrowRight />} fullWidth outlined rounded>Details</CButton>
           </Link>
-          <CButton rounded outlined>Enrole Now</CButton>
         </Stack>
       </Stack>
     </Stack>
